@@ -48,7 +48,64 @@ def create(db):
 			PRIMARY KEY (date, age_group)
 		)""")
 
+	for county in ("Illinois", "Chicago"):
+		cursor.execute(f"""CREATE TABLE covid_vaccine.{county}_administration(
+			date DATE NOT NULL UNIQUE PRIMARY KEY,
+			administered_vaccine_doses INT NOT NULL,
+			count_7_day_rolling_average INT NOT NULL,
+			population INT NOT NULL,
+			population_one_dose INT NOT NULL,
+			population_one_dose_percentage DECIMAL(4, 2) NOT NULL,
+			population_fully_vaccinated INT NOT NULL,
+			population_fully_vaccinated_percentage DECIMAL(4, 2) NOT NULL,
+			booster_doses INT NOT NULL,
+			allocated_doses INT NOT NULL,
+			inventory_report_date DATE NOT NULL,
+			lhd_reported_inventory INT NOT NULL,
+			community_reported_inventory INT NOT NULL,
+			total_reported_inventory INT NOT NULL
+		)""")
 
+	cursor.execute("""CREATE TABLE covid_vaccine.Illinois(
+		date DATE NOT NULL UNIQUE PRIMARY KEY,
+		total_doses INT NOT NULL,
+		total_administered_doses INT NOT NULL,
+		weekly_rolling_average INT NOT NULL,
+		illinoisans_fully_vaccinated_5_up INT NOT NULL,
+		illinoisans_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinoisans_at_least_one_dose_5_up INT NOT NULL,
+		illinoisans_at_least_one_dose_5_up DECIMAL(3, 1) NOT NULL,
+		illinoisans_fully_vaccinated_12_up INT NOT NULL,
+		illinoisans_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinoisans_at_least_one_dose_12_up INT NOT NULL,
+		illinoisans_at_least_one_does_12_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinoisans_fully_vaccinated_18_up INT NOT NULL,
+		illinoisans_fully_vaccinated_18_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinoisans_at_least_one_dose_18_up INT NOT NULL,
+		illinoisans_at_least_one_does_18_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinoisans_fully_vaccinated_65_up INT NOT NULL,
+		illinoisans_fully_vaccinated_65_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinoisans_at_least_one_dose_65_up INT NOT NULL,
+		illinoisans_at_least_one_does_65_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_fully_vaccinated_5_up INT NOT NULL,          
+		illinois_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_at_least_one_dose_5_up INT NOT NULL,          
+		illinois_at_least_one_dose_5_up DECIMAL(3, 1) NOT NULL,
+		illinois_fully_vaccinated_12_up INT NOT NULL,          
+		illinois_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_at_least_one_dose_12_up INT NOT NULL,          
+		illinois_at_least_one_does_12_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_fully_vaccinated_18_up INT NOT NULL,          
+		illinois_fully_vaccinated_18_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_at_least_one_dose_18_up INT NOT NULL,          
+		illinois_at_least_one_does_18_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_fully_vaccinated_65_up INT NOT NULL,          
+		illinois_fully_vaccinated_65_up_percentage DECIMAL(3, 1) NOT NULL,
+		illinois_at_least_one_dose_65_up INT NOT NULL,          
+		illinois_at_least_one_does_65_up_percentage DECIMAL(3, 1) NOT NULL,
+	)""")
+
+	db.commit()
 
 
 if __name__ == "__main__":
