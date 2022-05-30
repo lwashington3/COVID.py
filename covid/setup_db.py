@@ -18,8 +18,9 @@ def create(db):
 		change_in_total_tested INT NOT NULL,
 		change_in_confirmed_cases INT NOT NULL,
 		change_in_deaths INT NOT NULL,
-		confirmed_7_day_rolling_average DECIMAL(10, 3) NOT NULL,
-		deaths_7_day_rolling_average DECIMAL(7, 3) NOT NULL
+		tested_7_day_rolling_average DECIMAL(10, 3) NOT NULL,
+		confirmed_7_day_rolling_average DECIMAL(7, 3) NOT NULL,
+		deaths_7_day_rolling_average DECIMAL(6, 3) NOT NULL
 	)""")
 
 	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
