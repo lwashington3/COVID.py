@@ -4,7 +4,7 @@ import mysql.connector as sql
 
 
 def create(db):
-	cursor = db.cursor()
+	cursor = db.cursor(buffered=True)
 	cursor.execute("CREATE DATABASE covid")
 	cursor.execute("CREATE DATABASE covid_gender")
 	cursor.execute("CREATE DATABASE covid_age_race")

@@ -10,6 +10,11 @@ def iter_check(obj, type_name, name=None):
 	return obj if isinstance(obj, list) else list(obj)
 
 
+def json_to_date(json) -> date:
+	test_date = f"{json['testDate']['year']}-{json['testDate']['month']}-{json['testDate']['day']}"
+	return dt.strptime(test_date, "%Y-%m-%d").date()
+
+
 class IllinoisTestingResults:
 	def __init__(self, test_date, total_tested, confirmed_cases, deaths, tested_change,
 				 cases_change, deaths_change, tested_7_day_rolling_avg, cases_7_day_rolling_avg, deaths_7_day_rolling_avg):
@@ -130,7 +135,7 @@ class IllinoisTestingResults:
 
 	@classmethod
 	def from_json(cls, json: dict):
-		test_date = dt.strptime(json["testDate"], "")  # TODO: Check the format the date comes in for IL Testing Results
+		test_date = json_to_date(json["testDate"])
 		total_tested = int(json["total_tested"])
 		confirmed_cases = int(json["confirmed_cases"])
 		deaths = int(json["deaths"])
@@ -183,7 +188,7 @@ class OverallData:
 
 	@classmethod
 	def from_json(cls, json:dict):
-		last_updated_date = json["lastUpdatedDate"]
+		last_updated_date = json_to_date(json["lastUpdatedDate"])
 		state_testing_results = [IllinoisTestingResults.from_json(testing_result) for testing_result in json["state_testing_results"]]
 		return cls(last_updated_date, state_testing_results)
 
@@ -280,7 +285,7 @@ class Administration:
 
 	@classmethod
 	def from_json(cls, json:dict):
-		last_updated_date = json["lastUpdatedDate"]
+		last_updated_date = json_to_date(json["lastUpdatedDate"])
 		vaccine_administrations = [VaccineAdministration.from_json(administration) for administration in json["CurrentVaccineAdministration"]]
 		current_vaccine_administration = VaccineAdministration.from_json(json["VaccineAdministration"])
 		return cls(last_updated_date, vaccine_administrations, current_vaccine_administration)
@@ -630,6 +635,6 @@ class Root:
 
 	@classmethod
 	def from_json(cls, json:dct):
-		last_updated_date = json["lastUpdatedDate"]
+		last_updated_date = json_to_date(json["lastUpdatedDate"])
 		county_demographics = [CountyDemographic.from_json(demographic) for demographic in json["county_demographics"]]
 		return cls(last_updated_date, county_demographics)
