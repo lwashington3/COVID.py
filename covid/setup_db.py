@@ -1,5 +1,5 @@
+from .county_tools import County
 from os import getenv
-from dotenv import load_dotenv
 import mysql.connector as sql
 
 
@@ -49,8 +49,8 @@ def create(db):
 			PRIMARY KEY (date, age_group)
 		)""")
 
-	for county in ("Illinois", "Chicago"):
-		cursor.execute(f"""CREATE TABLE covid_vaccine.{county}_administration(
+	for county in (County.Illinois, County.Chicago):
+		cursor.execute(f"""CREATE TABLE covid_vaccine.{county.value}_administration(
 			date DATE NOT NULL UNIQUE PRIMARY KEY,
 			administered_vaccine_doses INT NOT NULL,
 			count_7_day_rolling_average INT NOT NULL,
@@ -75,7 +75,7 @@ def create(db):
 		illinoisans_fully_vaccinated_5_up INT NOT NULL,
 		illinoisans_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
 		illinoisans_at_least_one_dose_5_up INT NOT NULL,
-		illinoisans_at_least_one_dose_5_up DECIMAL(3, 1) NOT NULL,
+		illinoisans_at_least_one_dose_5_up_percentage DECIMAL(3, 1) NOT NULL,
 		illinoisans_fully_vaccinated_12_up INT NOT NULL,
 		illinoisans_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
 		illinoisans_at_least_one_dose_12_up INT NOT NULL,
@@ -91,7 +91,7 @@ def create(db):
 		illinois_fully_vaccinated_5_up INT NOT NULL,          
 		illinois_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
 		illinois_at_least_one_dose_5_up INT NOT NULL,          
-		illinois_at_least_one_dose_5_up DECIMAL(3, 1) NOT NULL,
+		illinois_at_least_one_dose_5_up_percentage DECIMAL(3, 1) NOT NULL,
 		illinois_fully_vaccinated_12_up INT NOT NULL,          
 		illinois_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
 		illinois_at_least_one_dose_12_up INT NOT NULL,          
@@ -110,8 +110,7 @@ def create(db):
 
 
 if __name__ == "__main__":
-	load_dotenv()
 	db = sql.connect(host="localhost",
-					 user="covidbot",
+					 user="root",
 					 password=getenv("COVID_DB_PASSWORD"))
 	create(db)

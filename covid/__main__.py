@@ -44,6 +44,11 @@ def main_scrape(db):
 		thread.join()
 
 
+def _add_common_options(parser):
+	parser.add_argument("-u", "--username", help="The username for the database", required=False)
+	parser.add_argument("-p", "--password", help="The password for the database", required=False)
+
+
 def _create_setup_parser(parser_factory):
 	parser = parser_factory("setup", help="Create the databases to hold the COVID info.")
 	_add_common_options(parser)
@@ -52,11 +57,6 @@ def _create_setup_parser(parser_factory):
 def _create_scrape_parser(parser_factory):
 	parser = parser_factory("scrape", help="Daily scrape.")
 	_add_common_options(parser)
-
-
-def _add_common_options(parser):
-	parser.add_argument("-u", "--username", help="The username for the database")
-	parser.add_argument("-p", "--password", help="The password for the database")
 
 
 def create_argument_parser():
@@ -90,5 +90,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-	db = sql.connect(hostname="localhost", user="covidbot", password=getenv("COVID_DB_PASSWORD"))
-	main(db)
+	main(argv[1:])

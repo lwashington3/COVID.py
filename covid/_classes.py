@@ -15,6 +15,10 @@ def json_to_date(json) -> date:
 	return dt.strptime(test_date, "%Y-%m-%d").date()
 
 
+def date_to_sql(day:date) -> str:
+	return day.strftime("%Y-%m-%d")
+
+
 class IllinoisTestingResults:
 	def __init__(self, test_date, total_tested, confirmed_cases, deaths, tested_change,
 				 cases_change, deaths_change, tested_7_day_rolling_avg, cases_7_day_rolling_avg, deaths_7_day_rolling_avg):
@@ -194,9 +198,43 @@ class OverallData:
 
 
 class VaccineAdministration:
-	def __init__(self, county_name, administered_count):
+	def __init__(self, county_name, administered_count, administered_count_change, administered_count_rolling_average,
+				 allocated_doses, persons_fully_vaccinated, persons_fully_vaccinated_change, persons_vaccinated_one_dose,
+				 persons_vaccinated_one_dose_change, booster_dose_administered, booster_dose_administered_change,
+				 report_date:date, population:int, percent_vaccinated_population, percent_vaccinated_one_dose_population,
+				 longitude:float, latitude:float, lhd_reported_inventory, community_reported_inventory,
+				 total_reported_inventory, inventory_report_date:date):
 		self.county_name = county_name
 		self.administered_count = administered_count
+		self.administered_count_change = administered_count_change
+		self.administered_count_rolling_average = administered_count_rolling_average
+		self.allocated_doses = allocated_doses
+		self.persons_fully_vaccinated = persons_fully_vaccinated
+		self.persons_fully_vaccinated_change = persons_fully_vaccinated_change
+		self.persons_vaccinated_one_dose = persons_vaccinated_one_dose
+		self.persons_vaccinated_one_dose_change = persons_vaccinated_one_dose_change
+		self.booster_dose_administered = booster_dose_administered
+		self.booster_dose_administered_change = booster_dose_administered_change
+		self.report_date = report_date
+		self.population = population
+		self.percent_vaccinated_population = percent_vaccinated_population
+		self.percent_vaccinated_one_dose_population = percent_vaccinated_one_dose_population
+		self.longitude = longitude
+		self.latitude = latitude
+		self.lhd_reported_inventory = lhd_reported_inventory
+		self.community_reported_inventory = community_reported_inventory
+		self.total_reported_inventory = total_reported_inventory
+		self.inventory_report_date = inventory_report_date
+
+	@property
+	def report_date(self) -> date:
+		return self._report_date
+
+	@report_date.setter
+	def report_date(self, report_date:date):
+		if not isinstance(report_date, date):
+			raise ValueError(f"The report date must be a datetime.date object, not: {report_date.__name__}")
+		self._report_date = report_date
 
 	@property
 	def county_name(self) -> str:
@@ -207,6 +245,36 @@ class VaccineAdministration:
 		if not isinstance(county_name, str):
 			county_name = str(county_name)
 		self._county_name = county_name
+
+	@property
+	def population(self) -> int:
+		return self._population
+
+	@population.setter
+	def population(self, population:int):
+		if not isinstance(population, int):
+			population = int(population)
+		self._population = population
+
+	@property
+	def longitude(self) -> float:
+		return self._longitude
+
+	@longitude.setter
+	def longitude(self, longitude:float):
+		if not isinstance(longitude, float):
+			longitude = float(longitude)
+		self._longitude = longitude
+
+	@property
+	def latitude(self) -> float:
+		return self._latitude
+
+	@latitude.setter
+	def latitude(self, latitude: float):
+		if not isinstance(latitude, float):
+			latitude = float(latitude)
+		self._latitude = latitude
 
 	@property
 	def administered_count(self) -> int:
@@ -228,11 +296,171 @@ class VaccineAdministration:
 			administered_count_change = int(administered_count_change)
 		self._administered_count_change = administered_count_change
 
+	@property
+	def administered_count_rolling_average(self) -> int:
+		return self._administered_count_rolling_average
+
+	@administered_count_rolling_average.setter
+	def administered_count_rolling_average(self, administered_count_rolling_average:int):
+		if not isinstance(administered_count_rolling_average, int):
+			administered_count_rolling_average = int(administered_count_rolling_average)
+		self._administered_count_rolling_average = administered_count_rolling_average
+
+	@property
+	def allocated_doses(self) -> int:
+		return self._allocated_doses
+
+	@allocated_doses.setter
+	def allocated_doses(self, allocated_doses:int):
+		if not isinstance(allocated_doses, int):
+			allocated_doses = int(allocated_doses)
+		self._allocated_doses = allocated_doses
+
+	@property
+	def persons_fully_vaccinated(self) -> int:
+		return self._persons_fully_vaccinated
+
+	@persons_fully_vaccinated.setter
+	def persons_fully_vaccinated(self, persons_fully_vaccinated:int):
+		if not isinstance(persons_fully_vaccinated, int):
+			persons_fully_vaccinated = int(persons_fully_vaccinated)
+		self._persons_fully_vaccinated = persons_fully_vaccinated
+
+	@property
+	def persons_fully_vaccinated_change(self) -> int:
+		return self._persons_fully_vaccinated_change
+
+	@persons_fully_vaccinated_change.setter
+	def persons_fully_vaccinated_change(self, persons_fully_vaccinated_change: int):
+		if not isinstance(persons_fully_vaccinated_change, int):
+			persons_fully_vaccinated_change = int(persons_fully_vaccinated_change)
+		self._persons_fully_vaccinated_change = persons_fully_vaccinated_change
+
+	@property
+	def persons_vaccinated_one_dose(self) -> int:
+		return self._persons_vaccinated_one_dose
+
+	@persons_vaccinated_one_dose.setter
+	def persons_vaccinated_one_dose(self, persons_vaccinated_one_dose:int):
+		if not isinstance(persons_vaccinated_one_dose, int):
+			persons_vaccinated_one_dose = int(persons_vaccinated_one_dose)
+		self._persons_vaccinated_one_dose = persons_vaccinated_one_dose
+
+	@property
+	def persons_vaccinated_one_dose_change(self) -> int:
+		return self._persons_vaccinated_one_dose_change
+
+	@persons_vaccinated_one_dose_change.setter
+	def persons_vaccinated_one_dose_change(self, persons_vaccinated_one_dose_change: int):
+		if not isinstance(persons_vaccinated_one_dose_change, int):
+			persons_vaccinated_one_dose_change = int(persons_vaccinated_one_dose_change)
+		self._persons_vaccinated_one_dose_change = persons_vaccinated_one_dose_change
+
+	@property
+	def booster_dose_administered(self) -> int:
+		return self._booster_dose_administered
+
+	@booster_dose_administered.setter
+	def booster_dose_administered(self, booster_dose_administered:int):
+		if not isinstance(booster_dose_administered, int):
+			booster_dose_administered = int(booster_dose_administered)
+		self._booster_dose_administered = booster_dose_administered
+
+	@property
+	def booster_dose_administered_change(self) -> int:
+		return self._booster_dose_administered_change
+
+	@booster_dose_administered_change.setter
+	def booster_dose_administered_change(self, booster_dose_administered_change: int):
+		if not isinstance(booster_dose_administered_change, int):
+			booster_dose_administered_change = int(booster_dose_administered_change)
+		self._booster_dose_administered_change = booster_dose_administered_change
+
+	@property
+	def percent_vaccinated_population(self) -> float:
+		return self._ercent_vaccinated_population
+
+	@percent_vaccinated_population.setter
+	def percent_vaccinated_population(self, percent_vaccinated_population:float):
+		if not isinstance(percent_vaccinated_population, int):
+			percent_vaccinated_population = float(percent_vaccinated_population)
+		self._percent_vaccinated_population = percent_vaccinated_population
+
+	@property
+	def percent_vaccinated_one_dose_population(self) -> float:
+		return self._ercent_vaccinated_one_dose_population
+
+	@percent_vaccinated_one_dose_population.setter
+	def percent_vaccinated_one_dose_population(self, percent_vaccinated_one_dose_population: float):
+		if not isinstance(percent_vaccinated_one_dose_population, int):
+			percent_vaccinated_one_dose_population = float(percent_vaccinated_one_dose_population)
+		self._percent_vaccinated_one_dose_population = percent_vaccinated_one_dose_population
+
+	@property
+	def lhd_reported_inventory(self) -> int:
+		return self._lhd_reported_inventory
+
+	@lhd_reported_inventory.setter
+	def lhd_reported_inventory(self, lhd_reported_inventory:int):
+		if not isinstance(lhd_reported_inventory, int):
+			lhd_reported_inventory = int(lhd_reported_inventory)
+		self._lhd_reported_inventory = lhd_reported_inventory
+
+	@property
+	def community_reported_inventory(self) -> int:
+		return self._community_reported_inventory
+
+	@community_reported_inventory.setter
+	def community_reported_inventory(self, community_reported_inventory:int):
+		if not isinstance(community_reported_inventory, int):
+			community_reported_inventory = int(community_reported_inventory)
+		self._community_reported_inventory = community_reported_inventory
+
+	@property
+	def total_reported_inventory(self) -> int:
+		return self._total_reported_inventory
+
+	@total_reported_inventory.setter
+	def total_reported_inventory(self, total_reported_inventory: int):
+		if not isinstance(total_reported_inventory, int):
+			total_reported_inventory = int(total_reported_inventory)
+		self._total_reported_inventory = total_reported_inventory
+
+	@property
+	def inventory_report_date(self) -> date:
+		return self._inventory_report_date
+
+	@inventory_report_date.setter
+	def inventory_report_date(self, inventory_report_date: date):
+		if not isinstance(inventory_report_date, date):
+			raise ValueError(f"The inventory report date must be a datetime.date object, not: {inventory_report_date.__name__}")
+		self._inventory_report_date = inventory_report_date
+
+	def value_tuple(self) -> tuple:
+		return (self.administered_count, self.administered_count_rolling_average, self.population,
+				self.persons_vaccinated_one_dose, self.percent_vaccinated_one_dose_population,
+				self.persons_fully_vaccinated, self.percent_vaccinated_population, self.booster_dose_administered,
+				self.allocated_doses, date_to_sql(self.inventory_report_date), self.lhd_reported_inventory,
+				self.community_reported_inventory, self.total_reported_inventory)
+
 	@classmethod
 	def from_json(cls, json:dict):
-		county_name = json["CountyName"]
-		administered_count = int(json["AdministeredCount"])
-		return cls(county_name, administered_count)
+		return cls(county_name=json["CountyName"], administered_count=json["AdministeredCount"],
+				   administered_count_change=json["AdministeredCountChange"],
+				   administered_count_rolling_average=json["AdministeredCountRollAvg"],
+				   allocated_doses=json["AllocatedDoses"], persons_fully_vaccinated=json["PersonsFullyVaccinated"],
+				   persons_fully_vaccinated_change=json["PersonsFullyVaccinatedChange"],
+				   persons_vaccinated_one_dose=json["PersonsVaccinatedOneDose"],
+				   persons_vaccinated_one_dose_change=json["PersonsVaccinatedOneDoseChange"],
+				   booster_dose_administered=json["BoosterDoseAdministered"],
+				   booster_dose_administered_change=json["BoosterDoseAdministeredChange"],
+				   report_date=json["Report_Date"], population=json["Population"],
+				   percent_vaccinated_population=json["PctVaccinatedPopulation"],
+				   percent_vaccinated_one_dose_population=["PctVaccinatedOneDosePopulation"],
+				   longitude=json["Longitude"], latitude=json["Latitude"],
+				   lhd_reported_inventory=json["LHDReportedInventory"],
+				   community_reported_inventory=json["CommunityReportedInventory"],
+				   total_reported_inventory=json["TotalReportedInventory"], inventory_report_date=json["InventoryReportDate"])
 
 
 class Administration:
@@ -246,7 +474,7 @@ class Administration:
 			yield vaccine_admin
 		raise StopIteration
 
-	def __getitem__(self, item):
+	def __getitem__(self, item) -> VaccineAdministration | None:
 		if isinstance(item, int):
 			return self.vaccine_administrations[item]
 		elif isinstance(item, date):
@@ -350,7 +578,7 @@ class Race:
 		self.color = color
 
 	@classmethod
-	def from_json(cls, json:dct):
+	def from_json(cls, json:dict):
 		description = json["description"]
 		confirmed_cases = int(json["count"])
 		tested = int(json["tested"])
@@ -415,6 +643,19 @@ class Age:
 			deaths = int(deaths)
 		self._deaths = deaths
 
+	def value_tuple(self, property_name:str):
+		dct = {race.description: getattr(race, property_name) for race in self.races}
+		american_indian = dct["AI/AN**"]
+		hawaiian = dct["NH/PI*"]
+		hispanic = dct["Hispanic"]
+		asian = dct["Asian"]
+		other = dct["Other"]
+		left_blank = dct["Left Blank"]
+		black = dct["Black"]
+		white = dct["White"]
+		total = american_indian + hawaiian + hispanic + asian + other + left_blank + black + white
+		return (self.age_group, american_indian, hawaiian, hispanic, asian, other, left_blank, black, white, total)
+
 	@classmethod
 	def from_json(cls, json:dict):
 		race_list = [Race.from_json(race) for race in json["race"]]
@@ -435,6 +676,7 @@ class Gender:
 
 	@property
 	def description(self) -> str:
+		"""The given gender: 'Female', 'Male', 'Unknown/Left Blank'"""
 		return self._description
 
 	@description.setter
@@ -597,7 +839,7 @@ class Root:
 			yield demographic
 		raise StopIteration
 
-	def __getitem__(self, item):
+	def __getitem__(self, item) -> CountyDemographic | None:
 		if isinstance(item, int):
 			return self.county_demographics[item]
 		elif isinstance(item, str):
@@ -634,7 +876,523 @@ class Root:
 			self._county_demographics = list(county_demographics)
 
 	@classmethod
-	def from_json(cls, json:dct):
+	def from_json(cls, json:dict):
 		last_updated_date = json_to_date(json["lastUpdatedDate"])
 		county_demographics = [CountyDemographic.from_json(demographic) for demographic in json["county_demographics"]]
 		return cls(last_updated_date, county_demographics)
+
+
+class StateWideVaccine:
+	def __init__(self, report_date:date, total_doses:int, total_administered:int, persons_fully_vaccinated:int,
+				 administered_rolling_average:float, administered_to_illinois_fully_vaccinated_5_plus,
+				 administered_to_illinois_fully_vaccinated_5_plus_percent, administered_to_illinois_fully_vaccinated_12_plus,
+				 administered_to_illinois_fully_vaccinated_12_plus_percent, administered_to_illinois_fully_vaccinated_18_plus,
+				 administered_to_illinois_fully_vaccinated_18_plus_percent, administered_to_illinois_fully_vaccinated_65_plus,
+				 administered_to_illinois_fully_vaccinated_65_plus_percent, administered_to_illinoisans_fully_vaccinated_5_plus,
+				 administered_to_illinoisans_fully_vaccinated_5_plus_percent, administered_to_illinoisans_fully_vaccinated_12_plus,
+				 administered_to_illinoisans_fully_vaccinated_12_plus_percent, administered_to_illinoisans_fully_vaccinated_18_plus,
+				 administered_to_illinoisans_fully_vaccinated_18_plus_percent, administered_to_illinoisans_fully_vaccinated_65_plus,
+				 administered_to_illinoisans_fully_vaccinated_65_plus_percent, administered_to_illinoisans_one_dose_5_plus,
+				 administered_to_illinois_one_dose_5_plus_percent, administered_to_illinois_one_dose_12_plus,
+				 administered_to_illinois_one_dose_12_plus_percent, administered_to_illinois_one_dose_18_plus,
+				 administered_to_illinois_one_dose_18_plus_percent, administered_to_illinois_one_dose_65_plus,
+				 administered_to_illinois_one_dose_65_plus_percent, administered_to_illinois_one_dose_5_plus,
+				 administered_to_illinoisans_one_dose_5_plus_percent, administered_to_illinoisans_one_dose_12_plus,
+				 administered_to_illinoisans_one_dose_12_plus_percent, administered_to_illinoisans_one_dose_18_plus,
+				 administered_to_illinoisans_one_dose_18_plus_percent, administered_to_illinoisans_one_dose_65_plus,
+				 administered_to_illinoisans_one_dose_65_plus_percent):
+		self.report_date = report_date
+		self.total_doses = total_doses
+		self.total_administered = total_administered
+		self.persons_fully_vaccinated = persons_fully_vaccinated
+		self.administered_rolling_average = administered_rolling_average
+		self.administered_to_illinois_fully_vaccinated_5_plus = administered_to_illinois_fully_vaccinated_5_plus
+		self.administered_to_illinois_fully_vaccinated_5_plus_percent = administered_to_illinois_fully_vaccinated_5_plus_percent
+		self.administered_to_illinois_fully_vaccinated_12_plus = administered_to_illinois_fully_vaccinated_12_plus
+		self.administered_to_illinois_fully_vaccinated_12_plus_percent = administered_to_illinois_fully_vaccinated_12_plus_percent
+		self.administered_to_illinois_fully_vaccinated_18_plus = administered_to_illinois_fully_vaccinated_18_plus
+		self.administered_to_illinois_fully_vaccinated_18_plus_percent = administered_to_illinois_fully_vaccinated_18_plus_percent
+		self.administered_to_illinois_fully_vaccinated_65_plus = administered_to_illinois_fully_vaccinated_65_plus
+		self.administered_to_illinois_fully_vaccinated_65_plus_percent = administered_to_illinois_fully_vaccinated_65_plus_percent
+		self.administered_to_illinoisans_fully_vaccinated_5_plus = administered_to_illinoisans_fully_vaccinated_5_plus
+		self.administered_to_illinoisans_fully_vaccinated_5_plus_percent = administered_to_illinoisans_fully_vaccinated_5_plus_percent
+		self.administered_to_illinoisans_fully_vaccinated_12_plus = administered_to_illinoisans_fully_vaccinated_12_plus
+		self.administered_to_illinoisans_fully_vaccinated_12_plus_percent = administered_to_illinoisans_fully_vaccinated_12_plus_percent
+		self.administered_to_illinoisans_fully_vaccinated_18_plus = administered_to_illinoisans_fully_vaccinated_18_plus
+		self.administered_to_illinoisans_fully_vaccinated_18_plus_percent = administered_to_illinoisans_fully_vaccinated_18_plus_percent
+		self.administered_to_illinoisans_fully_vaccinated_65_plus = administered_to_illinoisans_fully_vaccinated_65_plus
+		self.administered_to_illinoisans_fully_vaccinated_65_plus_percent = administered_to_illinoisans_fully_vaccinated_65_plus_percent
+		self.administered_to_illinoisans_one_dose_5_plus = administered_to_illinoisans_one_dose_5_plus
+		self.administered_to_illinois_one_dose_5_plus_percent = administered_to_illinois_one_dose_5_plus_percent
+		self.administered_to_illinois_one_dose_12_plus = administered_to_illinois_one_dose_12_plus
+		self.administered_to_illinois_one_dose_12_plus_percent = administered_to_illinois_one_dose_12_plus_percent
+		self.administered_to_illinois_one_dose_18_plus = administered_to_illinois_one_dose_18_plus
+		self.administered_to_illinois_one_dose_18_plus_percent = administered_to_illinois_one_dose_18_plus_percent
+		self.administered_to_illinois_one_dose_65_plus = administered_to_illinois_one_dose_65_plus
+		self.administered_to_illinois_one_dose_65_plus_percent = administered_to_illinois_one_dose_65_plus_percent
+		self.administered_to_illinois_one_dose_5_plus = administered_to_illinois_one_dose_5_plus
+		self.administered_to_illinoisans_one_dose_5_plus_percent = administered_to_illinoisans_one_dose_5_plus_percent
+		self.administered_to_illinoisans_one_dose_12_plus = administered_to_illinoisans_one_dose_12_plus
+		self.administered_to_illinoisans_one_dose_12_plus_percent = administered_to_illinoisans_one_dose_12_plus_percent
+		self.administered_to_illinoisans_one_dose_18_plus = administered_to_illinoisans_one_dose_18_plus
+		self.administered_to_illinoisans_one_dose_18_plus_percent = administered_to_illinoisans_one_dose_18_plus_percent
+		self.administered_to_illinoisans_one_dose_65_plus = administered_to_illinoisans_one_dose_65_plus
+		self.administered_to_illinoisans_one_dose_65_plus_percent = administered_to_illinoisans_one_dose_65_plus_percent
+
+	@property
+	def report_date(self) -> date:
+		return self._report_date
+
+	@report_date.setter
+	def report_date(self, report_date: date):
+		if not isinstance(report_date, date):
+			raise ValueError(f"The report date must be a datetime.date object, not: {report_date.__name__}")
+		self._report_date = report_date
+
+	@property
+	def total_doses(self) -> int:
+		return self._total_doses
+
+	@total_doses.setter
+	def total_doses(self, total_doses:int):
+		if not isinstance(total_doses, int):
+			total_doses = int(total_doses)
+		self._total_doses = total_doses
+
+	@property
+	def total_administered(self) -> int:
+		return self._total_administered
+
+	@total_administered.setter
+	def total_administered(self, total_administered:int):
+		if not isinstance(total_administered, int):
+			total_administered = int(total_administered)
+		self._total_administered = total_administered
+
+	@property
+	def persons_fully_vaccinated(self) -> int:
+		return self._persons_fully_vaccinated
+
+	@persons_fully_vaccinated.setter
+	def persons_fully_vaccinated(self, persons_fully_vaccinated:int):
+		if not isinstance(persons_fully_vaccinated, int):
+			persons_fully_vaccinated = int(persons_fully_vaccinated)
+		self._persons_fully_vaccinated = persons_fully_vaccinated
+
+	@property
+	def administered_rolling_average(self) -> float:
+		return self._administered_rolling_average
+
+	@administered_rolling_average.setter
+	def administered_rolling_average(self, administered_rolling_average:float):
+		if not isinstance(administered_rolling_average, float):
+			administered_rolling_average = float(administered_rolling_average)
+		self._administered_rolling_average = administered_rolling_average
+
+	# region Fully Vaccinated Administered to Illinois
+	@property
+	def administered_to_illinois_fully_vaccinated_5_plus(self) -> int:
+		return self._dministered_to_illinois_fully_vaccinated_5_plus
+
+	@administered_to_illinois_fully_vaccinated_5_plus.setter
+	def administered_to_illinois_fully_vaccinated_5_plus(self, administered_to_illinois_fully_vaccinated_5_plus:int):
+		if not isinstance(administered_to_illinois_fully_vaccinated_5_plus, int):
+			administered_to_illinois_fully_vaccinated_5_plus = int(administered_to_illinois_fully_vaccinated_5_plus)
+		self._administered_to_illinois_fully_vaccinated_5_plus = administered_to_illinois_fully_vaccinated_5_plus
+
+	@property
+	def administered_to_illinois_fully_vaccinated_5_plus_percent(self) -> float:
+		return self._dministered_to_illinois_fully_vaccinated_5_plus_percent
+
+	@administered_to_illinois_fully_vaccinated_5_plus_percent.setter
+	def administered_to_illinois_fully_vaccinated_5_plus_percent(self, administered_to_illinois_fully_vaccinated_5_plus_percent: float):
+		if not isinstance(administered_to_illinois_fully_vaccinated_5_plus_percent, float):
+			administered_to_illinois_fully_vaccinated_5_plus_percent = float(administered_to_illinois_fully_vaccinated_5_plus_percent)
+		self.administered_to_illinois_fully_vaccinated_5_plus_percent = administered_to_illinois_fully_vaccinated_5_plus_percent
+
+	@property
+	def administered_to_illinois_fully_vaccinated_12_plus(self) -> int:
+		return self._dministered_to_illinois_fully_vaccinated_12_plus
+
+	@administered_to_illinois_fully_vaccinated_12_plus.setter
+	def administered_to_illinois_fully_vaccinated_12_plus(self, administered_to_illinois_fully_vaccinated_12_plus:int):
+		if not isinstance(administered_to_illinois_fully_vaccinated_12_plus, int):
+			administered_to_illinois_fully_vaccinated_12_plus = int(administered_to_illinois_fully_vaccinated_12_plus)
+		self._administered_to_illinois_fully_vaccinated_12_plus = administered_to_illinois_fully_vaccinated_12_plus
+
+	@property
+	def administered_to_illinois_fully_vaccinated_12_plus_percent(self) -> float:
+		return self._dministered_to_illinois_fully_vaccinated_12_plus_percent
+
+	@administered_to_illinois_fully_vaccinated_12_plus_percent.setter
+	def administered_to_illinois_fully_vaccinated_12_plus_percent(self, administered_to_illinois_fully_vaccinated_12_plus_percent: float):
+		if not isinstance(administered_to_illinois_fully_vaccinated_12_plus_percent, float):
+			administered_to_illinois_fully_vaccinated_12_plus_percent = float(administered_to_illinois_fully_vaccinated_12_plus_percent)
+		self.administered_to_illinois_fully_vaccinated_12_plus_percent = administered_to_illinois_fully_vaccinated_12_plus_percent
+
+	@property
+	def administered_to_illinois_fully_vaccinated_18_plus(self) -> int:
+		return self._dministered_to_illinois_fully_vaccinated_18_plus
+
+	@administered_to_illinois_fully_vaccinated_18_plus.setter
+	def administered_to_illinois_fully_vaccinated_18_plus(self, administered_to_illinois_fully_vaccinated_18_plus:int):
+		if not isinstance(administered_to_illinois_fully_vaccinated_18_plus, int):
+			administered_to_illinois_fully_vaccinated_18_plus = int(administered_to_illinois_fully_vaccinated_18_plus)
+		self._administered_to_illinois_fully_vaccinated_18_plus = administered_to_illinois_fully_vaccinated_18_plus
+
+	@property
+	def administered_to_illinois_fully_vaccinated_18_plus_percent(self) -> float:
+		return self._dministered_to_illinois_fully_vaccinated_18_plus_percent
+
+	@administered_to_illinois_fully_vaccinated_18_plus_percent.setter
+	def administered_to_illinois_fully_vaccinated_18_plus_percent(self, administered_to_illinois_fully_vaccinated_18_plus_percent: float):
+		if not isinstance(administered_to_illinois_fully_vaccinated_18_plus_percent, float):
+			administered_to_illinois_fully_vaccinated_18_plus_percent = float(administered_to_illinois_fully_vaccinated_18_plus_percent)
+		self.administered_to_illinois_fully_vaccinated_18_plus_percent = administered_to_illinois_fully_vaccinated_18_plus_percent
+
+	@property
+	def administered_to_illinois_fully_vaccinated_65_plus(self) -> int:
+		return self._dministered_to_illinois_fully_vaccinated_65_plus
+
+	@administered_to_illinois_fully_vaccinated_65_plus.setter
+	def administered_to_illinois_fully_vaccinated_65_plus(self, administered_to_illinois_fully_vaccinated_65_plus:int):
+		if not isinstance(administered_to_illinois_fully_vaccinated_65_plus, int):
+			administered_to_illinois_fully_vaccinated_65_plus = int(administered_to_illinois_fully_vaccinated_65_plus)
+		self._administered_to_illinois_fully_vaccinated_65_plus = administered_to_illinois_fully_vaccinated_65_plus
+
+	@property
+	def administered_to_illinois_fully_vaccinated_65_plus_percent(self) -> float:
+		return self._dministered_to_illinois_fully_vaccinated_65_plus_percent
+
+	@administered_to_illinois_fully_vaccinated_65_plus_percent.setter
+	def administered_to_illinois_fully_vaccinated_65_plus_percent(self, administered_to_illinois_fully_vaccinated_65_plus_percent: float):
+		if not isinstance(administered_to_illinois_fully_vaccinated_65_plus_percent, float):
+			administered_to_illinois_fully_vaccinated_65_plus_percent = float(administered_to_illinois_fully_vaccinated_65_plus_percent)
+		self.administered_to_illinois_fully_vaccinated_65_plus_percent = administered_to_illinois_fully_vaccinated_65_plus_percent
+	# endregion
+
+	# region Fully Vaccinated Administered to Illinoisans
+	@property
+	def administered_to_illinoisans_fully_vaccinated_5_plus(self) -> int:
+		return self._administered_to_illinoisans_fully_vaccinated_5_plus
+
+	@administered_to_illinoisans_fully_vaccinated_5_plus.setter
+	def administered_to_illinoisans_fully_vaccinated_5_plus(self, administered_to_illinoisans_fully_vaccinated_5_plus: int):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_5_plus, int):
+			administered_to_illinoisans_fully_vaccinated_5_plus = int(administered_to_illinoisans_fully_vaccinated_5_plus)
+		self._administered_to_illinoisans_fully_vaccinated_5_plus = administered_to_illinoisans_fully_vaccinated_5_plus
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_5_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_fully_vaccinated_5_plus_percent
+
+	@administered_to_illinoisans_fully_vaccinated_5_plus_percent.setter
+	def administered_to_illinoisans_fully_vaccinated_5_plus_percent(self, administered_to_illinoisans_fully_vaccinated_5_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_5_plus_percent, float):
+			administered_to_illinoisans_fully_vaccinated_5_plus_percent = float(administered_to_illinoisans_fully_vaccinated_5_plus_percent)
+		self.administered_to_illinoisans_fully_vaccinated_5_plus_percent = administered_to_illinoisans_fully_vaccinated_5_plus_percent
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_12_plus(self) -> int:
+		return self._dministered_to_illinoisans_fully_vaccinated_12_plus
+
+	@administered_to_illinoisans_fully_vaccinated_12_plus.setter
+	def administered_to_illinoisans_fully_vaccinated_12_plus(self, administered_to_illinoisans_fully_vaccinated_12_plus: int):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_12_plus, int):
+			administered_to_illinoisans_fully_vaccinated_12_plus = int(administered_to_illinoisans_fully_vaccinated_12_plus)
+		self._administered_to_illinoisans_fully_vaccinated_12_plus = administered_to_illinoisans_fully_vaccinated_12_plus
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_12_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_fully_vaccinated_12_plus_percent
+
+	@administered_to_illinoisans_fully_vaccinated_12_plus_percent.setter
+	def administered_to_illinoisans_fully_vaccinated_12_plus_percent(self, administered_to_illinoisans_fully_vaccinated_12_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_12_plus_percent, float):
+			administered_to_illinoisans_fully_vaccinated_12_plus_percent = float(administered_to_illinoisans_fully_vaccinated_12_plus_percent)
+		self.administered_to_illinoisans_fully_vaccinated_12_plus_percent = administered_to_illinoisans_fully_vaccinated_12_plus_percent
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_18_plus(self) -> int:
+		return self._dministered_to_illinoisans_fully_vaccinated_18_plus
+
+	@administered_to_illinoisans_fully_vaccinated_18_plus.setter
+	def administered_to_illinoisans_fully_vaccinated_18_plus(self, administered_to_illinoisans_fully_vaccinated_18_plus: int):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_18_plus, int):
+			administered_to_illinoisans_fully_vaccinated_18_plus = int(administered_to_illinoisans_fully_vaccinated_18_plus)
+		self._administered_to_illinoisans_fully_vaccinated_18_plus = administered_to_illinoisans_fully_vaccinated_18_plus
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_18_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_fully_vaccinated_18_plus_percent
+
+	@administered_to_illinoisans_fully_vaccinated_18_plus_percent.setter
+	def administered_to_illinoisans_fully_vaccinated_18_plus_percent(self, administered_to_illinoisans_fully_vaccinated_18_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_18_plus_percent, float):
+			administered_to_illinoisans_fully_vaccinated_18_plus_percent = float(administered_to_illinoisans_fully_vaccinated_18_plus_percent)
+		self.administered_to_illinoisans_fully_vaccinated_18_plus_percent = administered_to_illinoisans_fully_vaccinated_18_plus_percent
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_65_plus(self) -> int:
+		return self._dministered_to_illinoisans_fully_vaccinated_65_plus
+
+	@administered_to_illinoisans_fully_vaccinated_65_plus.setter
+	def administered_to_illinoisans_fully_vaccinated_65_plus(self, administered_to_illinoisans_fully_vaccinated_65_plus: int):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_65_plus, int):
+			administered_to_illinoisans_fully_vaccinated_65_plus = int(administered_to_illinoisans_fully_vaccinated_65_plus)
+		self._administered_to_illinoisans_fully_vaccinated_65_plus = administered_to_illinoisans_fully_vaccinated_65_plus
+
+	@property
+	def administered_to_illinoisans_fully_vaccinated_65_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_fully_vaccinated_65_plus_percent
+
+	@administered_to_illinoisans_fully_vaccinated_65_plus_percent.setter
+	def administered_to_illinoisans_fully_vaccinated_65_plus_percent(self, administered_to_illinoisans_fully_vaccinated_65_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_fully_vaccinated_65_plus_percent, float):
+			administered_to_illinoisans_fully_vaccinated_65_plus_percent = float(administered_to_illinoisans_fully_vaccinated_65_plus_percent)
+		self._administered_to_illinoisans_fully_vaccinated_65_plus_percent = administered_to_illinoisans_fully_vaccinated_65_plus_percent
+	# endregion
+
+	# region One Dose Administered to Illinois
+	@property
+	def administered_to_illinois_one_dose_5_plus(self) -> int:
+		return self._dministered_to_illinois_one_dose_5_plus
+
+	@administered_to_illinois_one_dose_5_plus.setter
+	def administered_to_illinois_one_dose_5_plus(self, administered_to_illinois_one_dose_5_plus: int):
+		if not isinstance(administered_to_illinois_one_dose_5_plus, int):
+			administered_to_illinois_one_dose_5_plus = int(administered_to_illinois_one_dose_5_plus)
+		self._administered_to_illinois_one_dose_5_plus = administered_to_illinois_one_dose_5_plus
+
+	@property
+	def administered_to_illinois_one_dose_5_plus_percent(self) -> float:
+		return self._dministered_to_illinois_one_dose_5_plus_percent
+
+	@administered_to_illinois_one_dose_5_plus_percent.setter
+	def administered_to_illinois_one_dose_5_plus_percent(self, administered_to_illinois_one_dose_5_plus_percent: float):
+		if not isinstance(administered_to_illinois_one_dose_5_plus_percent, float):
+			administered_to_illinois_one_dose_5_plus_percent = float(administered_to_illinois_one_dose_5_plus_percent)
+		self.administered_to_illinois_one_dose_5_plus_percent = administered_to_illinois_one_dose_5_plus_percent
+
+	@property
+	def administered_to_illinois_one_dose_12_plus(self) -> int:
+		return self._dministered_to_illinois_one_dose_12_plus
+
+	@administered_to_illinois_one_dose_12_plus.setter
+	def administered_to_illinois_one_dose_12_plus(self, administered_to_illinois_one_dose_12_plus: int):
+		if not isinstance(administered_to_illinois_one_dose_12_plus, int):
+			administered_to_illinois_one_dose_12_plus = int(administered_to_illinois_one_dose_12_plus)
+		self._administered_to_illinois_one_dose_12_plus = administered_to_illinois_one_dose_12_plus
+
+	@property
+	def administered_to_illinois_one_dose_12_plus_percent(self) -> float:
+		return self._dministered_to_illinois_one_dose_12_plus_percent
+
+	@administered_to_illinois_one_dose_12_plus_percent.setter
+	def administered_to_illinois_one_dose_12_plus_percent(self, administered_to_illinois_one_dose_12_plus_percent: float):
+		if not isinstance(administered_to_illinois_one_dose_12_plus_percent, float):
+			administered_to_illinois_one_dose_12_plus_percent = float(administered_to_illinois_one_dose_12_plus_percent)
+		self.administered_to_illinois_one_dose_12_plus_percent = administered_to_illinois_one_dose_12_plus_percent
+
+	@property
+	def administered_to_illinois_one_dose_18_plus(self) -> int:
+		return self._dministered_to_illinois_one_dose_18_plus
+
+	@administered_to_illinois_one_dose_18_plus.setter
+	def administered_to_illinois_one_dose_18_plus(self, administered_to_illinois_one_dose_18_plus: int):
+		if not isinstance(administered_to_illinois_one_dose_18_plus, int):
+			administered_to_illinois_one_dose_18_plus = int(administered_to_illinois_one_dose_18_plus)
+		self._administered_to_illinois_one_dose_18_plus = administered_to_illinois_one_dose_18_plus
+
+	@property
+	def administered_to_illinois_one_dose_18_plus_percent(self) -> float:
+		return self._dministered_to_illinois_one_dose_18_plus_percent
+
+	@administered_to_illinois_one_dose_18_plus_percent.setter
+	def administered_to_illinois_one_dose_18_plus_percent(self, administered_to_illinois_one_dose_18_plus_percent: float):
+		if not isinstance(administered_to_illinois_one_dose_18_plus_percent, float):
+			administered_to_illinois_one_dose_18_plus_percent = float(administered_to_illinois_one_dose_18_plus_percent)
+		self.administered_to_illinois_one_dose_18_plus_percent = administered_to_illinois_one_dose_18_plus_percent
+
+	@property
+	def administered_to_illinois_one_dose_65_plus(self) -> int:
+		return self._dministered_to_illinois_one_dose_65_plus
+
+	@administered_to_illinois_one_dose_65_plus.setter
+	def administered_to_illinois_one_dose_65_plus(self, administered_to_illinois_one_dose_65_plus: int):
+		if not isinstance(administered_to_illinois_one_dose_65_plus, int):
+			administered_to_illinois_one_dose_65_plus = int(administered_to_illinois_one_dose_65_plus)
+		self._administered_to_illinois_one_dose_65_plus = administered_to_illinois_one_dose_65_plus
+
+	@property
+	def administered_to_illinois_one_dose_65_plus_percent(self) -> float:
+		return self._dministered_to_illinois_one_dose_65_plus_percent
+
+	@administered_to_illinois_one_dose_65_plus_percent.setter
+	def administered_to_illinois_one_dose_65_plus_percent(self, administered_to_illinois_one_dose_65_plus_percent: float):
+		if not isinstance(administered_to_illinois_one_dose_65_plus_percent, float):
+			administered_to_illinois_one_dose_65_plus_percent = float(administered_to_illinois_one_dose_65_plus_percent)
+		self.administered_to_illinois_one_dose_65_plus_percent = administered_to_illinois_one_dose_65_plus_percent
+	# endregion
+
+	# region One Dose Administered to Illinoisans
+	@property
+	def administered_to_illinoisans_one_dose_5_plus(self) -> int:
+		return self._administered_to_illinoisans_one_dose_5_plus
+
+	@administered_to_illinoisans_one_dose_5_plus.setter
+	def administered_to_illinoisans_one_dose_5_plus(self, administered_to_illinoisans_one_dose_5_plus: int):
+		if not isinstance(administered_to_illinoisans_one_dose_5_plus, int):
+			administered_to_illinoisans_one_dose_5_plus = int(administered_to_illinoisans_one_dose_5_plus)
+		self._administered_to_illinoisans_one_dose_5_plus = administered_to_illinoisans_one_dose_5_plus
+
+	@property
+	def administered_to_illinoisans_one_dose_5_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_one_dose_5_plus_percent
+
+	@administered_to_illinoisans_one_dose_5_plus_percent.setter
+	def administered_to_illinoisans_one_dose_5_plus_percent(self, administered_to_illinoisans_one_dose_5_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_one_dose_5_plus_percent, float):
+			administered_to_illinoisans_one_dose_5_plus_percent = float(administered_to_illinoisans_one_dose_5_plus_percent)
+		self.administered_to_illinoisans_one_dose_5_plus_percent = administered_to_illinoisans_one_dose_5_plus_percent
+
+	@property
+	def administered_to_illinoisans_one_dose_12_plus(self) -> int:
+		return self._dministered_to_illinoisans_one_dose_12_plus
+
+	@administered_to_illinoisans_one_dose_12_plus.setter
+	def administered_to_illinoisans_one_dose_12_plus(self, administered_to_illinoisans_one_dose_12_plus: int):
+		if not isinstance(administered_to_illinoisans_one_dose_12_plus, int):
+			administered_to_illinoisans_one_dose_12_plus = int(administered_to_illinoisans_one_dose_12_plus)
+		self._administered_to_illinoisans_one_dose_12_plus = administered_to_illinoisans_one_dose_12_plus
+
+	@property
+	def administered_to_illinoisans_one_dose_12_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_one_dose_12_plus_percent
+
+	@administered_to_illinoisans_one_dose_12_plus_percent.setter
+	def administered_to_illinoisans_one_dose_12_plus_percent(self, administered_to_illinoisans_one_dose_12_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_one_dose_12_plus_percent, float):
+			administered_to_illinoisans_one_dose_12_plus_percent = float(administered_to_illinoisans_one_dose_12_plus_percent)
+		self.administered_to_illinoisans_one_dose_12_plus_percent = administered_to_illinoisans_one_dose_12_plus_percent
+
+	@property
+	def administered_to_illinoisans_one_dose_18_plus(self) -> int:
+		return self._dministered_to_illinoisans_one_dose_18_plus
+
+	@administered_to_illinoisans_one_dose_18_plus.setter
+	def administered_to_illinoisans_one_dose_18_plus(self, administered_to_illinoisans_one_dose_18_plus: int):
+		if not isinstance(administered_to_illinoisans_one_dose_18_plus, int):
+			administered_to_illinoisans_one_dose_18_plus = int(administered_to_illinoisans_one_dose_18_plus)
+		self._administered_to_illinoisans_one_dose_18_plus = administered_to_illinoisans_one_dose_18_plus
+
+	@property
+	def administered_to_illinoisans_one_dose_18_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_one_dose_18_plus_percent
+
+	@administered_to_illinoisans_one_dose_18_plus_percent.setter
+	def administered_to_illinoisans_one_dose_18_plus_percent(self, administered_to_illinoisans_one_dose_18_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_one_dose_18_plus_percent, float):
+			administered_to_illinoisans_one_dose_18_plus_percent = float(administered_to_illinoisans_one_dose_18_plus_percent)
+		self.administered_to_illinoisans_one_dose_18_plus_percent = administered_to_illinoisans_one_dose_18_plus_percent
+
+	@property
+	def administered_to_illinoisans_one_dose_65_plus(self) -> int:
+		return self._dministered_to_illinoisans_one_dose_65_plus
+
+	@administered_to_illinoisans_one_dose_65_plus.setter
+	def administered_to_illinoisans_one_dose_65_plus(self, administered_to_illinoisans_one_dose_65_plus: int):
+		if not isinstance(administered_to_illinoisans_one_dose_65_plus, int):
+			administered_to_illinoisans_one_dose_65_plus = int(administered_to_illinoisans_one_dose_65_plus)
+		self._administered_to_illinoisans_one_dose_65_plus = administered_to_illinoisans_one_dose_65_plus
+
+	@property
+	def administered_to_illinoisans_one_dose_65_plus_percent(self) -> float:
+		return self._dministered_to_illinoisans_one_dose_65_plus_percent
+
+	@administered_to_illinoisans_one_dose_65_plus_percent.setter
+	def administered_to_illinoisans_one_dose_65_plus_percent(self, administered_to_illinoisans_one_dose_65_plus_percent: float):
+		if not isinstance(administered_to_illinoisans_one_dose_65_plus_percent, float):
+			administered_to_illinoisans_one_dose_65_plus_percent = float(administered_to_illinoisans_one_dose_65_plus_percent)
+		self._administered_to_illinoisans_one_dose_65_plus_percent = administered_to_illinoisans_one_dose_65_plus_percent
+	# endregion
+
+	def value_tuple(self):
+		return (self.total_doses, self.total_administered, self.administered_rolling_average,
+				self.administered_to_illinoisans_fully_vaccinated_5_plus,
+				self.administered_to_illinoisans_fully_vaccinated_5_plus_percent,
+				self.administered_to_illinoisans_one_dose_5_plus,
+				self.administered_to_illinoisans_one_dose_5_plus_percent,
+
+				self.administered_to_illinoisans_fully_vaccinated_12_plus,
+				self.administered_to_illinoisans_fully_vaccinated_12_plus_percent,
+				self.administered_to_illinoisans_one_dose_12_plus,
+				self.administered_to_illinoisans_one_dose_12_plus_percent,
+
+				self.administered_to_illinoisans_fully_vaccinated_18_plus,
+				self.administered_to_illinoisans_fully_vaccinated_18_plus_percent,
+				self.administered_to_illinoisans_one_dose_18_plus,
+				self.administered_to_illinoisans_one_dose_18_plus_percent,
+
+				self.administered_to_illinoisans_fully_vaccinated_65_plus,
+				self.administered_to_illinoisans_fully_vaccinated_65_plus_percent,
+				self.administered_to_illinoisans_one_dose_65_plus,
+				self.administered_to_illinoisans_one_dose_65_plus_percent,
+
+				self.administered_to_illinois_fully_vaccinated_5_plus,
+				self.administered_to_illinois_fully_vaccinated_5_plus_percent,
+				self.administered_to_illinois_one_dose_5_plus,
+				self.administered_to_illinois_one_dose_5_plus_percent,
+
+				self.administered_to_illinois_fully_vaccinated_12_plus,
+				self.administered_to_illinois_fully_vaccinated_12_plus_percent,
+				self.administered_to_illinois_one_dose_12_plus,
+				self.administered_to_illinois_one_dose_12_plus_percent,
+
+				self.administered_to_illinois_fully_vaccinated_18_plus,
+				self.administered_to_illinois_fully_vaccinated_18_plus_percent,
+				self.administered_to_illinois_one_dose_18_plus,
+				self.administered_to_illinois_one_dose_18_plus_percent,
+
+				self.administered_to_illinois_fully_vaccinated_65_plus,
+				self.administered_to_illinois_fully_vaccinated_65_plus_percent,
+				self.administered_to_illinois_one_dose_65_plus,
+				self.administered_to_illinois_one_dose_65_plus_percent)
+
+	@classmethod
+	def from_json(cls, json:dct):
+		return cls(report_date=json["Report_Date"], total_doses=json["Total_Delivered"],
+					total_administered=json["Total_Administered"], persons_fully_vaccinated=json["Persons_Fully_Vaccinated"],
+					administered_rolling_average=json["AdministeredRollAvg"],
+					administered_to_illinois_fully_vaccinated_5_plus=json["Persons_Fully_Vaccinated5plus"],
+					administered_to_illinois_fully_vaccinated_5_plus_percent=json["Population_Fully_Vaccinated5plus"],
+					administered_to_illinois_fully_vaccinated_12_plus=json["Persons_Fully_Vaccinated12plus"],
+					administered_to_illinois_fully_vaccinated_12_plus_percent=json["Population_Fully_Vaccinated12plus"],
+					administered_to_illinois_fully_vaccinated_18_plus=json["Persons_Fully_Vaccinated18plus"],
+					administered_to_illinois_fully_vaccinated_18_plus_percent=json["Population_Fully_Vaccinated18plus"],
+					administered_to_illinois_fully_vaccinated_65_plus=json["Persons_Fully_Vaccinated65plus"],
+					administered_to_illinois_fully_vaccinated_65_plus_percent=json["Population_Fully_Vaccinated65plus"],
+					administered_to_illinoisans_fully_vaccinated_5_plus=json["Persons_Fully_Vaccinated5plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_5_plus_percent=json["Population_Fully_Vaccinated5plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_12_plus=json["Persons_Fully_Vaccinated12plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_12_plus_percent=json["Population_Fully_Vaccinated12plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_18_plus=json["Persons_Fully_Vaccinated18plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_18_plus_percent=json["Population_Fully_Vaccinated18plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_65_plus=json["Persons_Fully_Vaccinated65plusCDC"],
+					administered_to_illinoisans_fully_vaccinated_65_plus_percent=json["Population_Fully_Vaccinated65plusCDC"],
+					administered_to_illinoisans_one_dose_5_plus=json["Vaccinated5plusOneDose"],
+					administered_to_illinois_one_dose_5_plus_percent=json["Vaccinated5plusPercentOneDose"],
+					administered_to_illinois_one_dose_12_plus=json["Vaccinated12plusOneDose"],
+					administered_to_illinois_one_dose_12_plus_percent=json["Vaccinated12plusPercentOneDose"],
+					administered_to_illinois_one_dose_18_plus=json["Vaccinated18plusOneDose"],
+					administered_to_illinois_one_dose_18_plus_percent=json["Vaccinated18plusPercentOneDose"],
+					administered_to_illinois_one_dose_65_plus=json["Vaccinated65plusOneDose"],
+					administered_to_illinois_one_dose_65_plus_percent=json["Vaccinated65plusPercentOneDose"],
+					administered_to_illinois_one_dose_5_plus=json["Vaccinated5plusOneDoseCDC"],
+					administered_to_illinoisans_one_dose_5_plus_percent=json["Vaccinated5plusPercentOneDoseCDC"],
+					administered_to_illinoisans_one_dose_12_plus=json["Vaccinated12plusOneDoseCDC"],
+					administered_to_illinoisans_one_dose_12_plus_percent=json["Vaccinated12plusPercentOneDoseCDC"],
+					administered_to_illinoisans_one_dose_18_plus=json["Vaccinated18plusOneDoseCDC"],
+					administered_to_illinoisans_one_dose_18_plus_percent=json["Vaccinated18plusPercentOneDoseCDC"],
+					administered_to_illinoisans_one_dose_65_plus=json["Vaccinated65plusOneDoseCDC"],
+					administered_to_illinoisans_one_dose_65_plus_percent=json["Vaccinated65plusPercentOneDoseCDC"])
