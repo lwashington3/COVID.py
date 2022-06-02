@@ -1,42 +1,43 @@
 from .scrape import scrape_overall_data, scrape_gender_data, scrape_age_race_data, scrape_illinois_vaccine_data, scrape_illinois_vaccine_administration
 from argparse import ArgumentParser
 import mysql.connector as sql
+from mysql.connector.connection_cext import CMySQLConnection
 from os import getenv
 from sys import argv
 from threading import Thread
 
 
-def scrape_overall(db):
+def scrape_overall(db:CMySQLConnection):
 	print("Scraping Overall Data")
 	scrape_overall_data(db)
 	print("Finished scraping Overall Data")
 
 
-def scrape_gender(db):
+def scrape_gender(db:CMySQLConnection):
 	print("Scraping Gender Data")
 	scrape_gender_data(db)
 	print("Finished scraping Gender Data")
 
 
-def age_race(db):
+def age_race(db:CMySQLConnection):
 	print("Scraping Age/Race Data")
 	scrape_age_race_data(db)
 	print("Finished scraping Age/Race Data")
 
 
-def illinois_vaccine(db):
+def illinois_vaccine(db:CMySQLConnection):
 	print("Scraping Statewide Vaccine Data")
 	scrape_illinois_vaccine_data(db)
 	print("Finished scraping Statewide Vaccine Data")
 
 
-def illinois_administration(db):
+def illinois_administration(db:CMySQLConnection):
 	print("Scraping Vaccine Administration Data")
 	scrape_illinois_vaccine_administration(db)
 	print("Finished scraping Vaccine Administration Data")
 
 
-def main_scrape(db):
+def main_scrape(db:CMySQLConnection):
 	threads = [Thread(target=func, args=(db)) for func in [scrape_overall, scrape_gender, age_race, illinois_vaccine, illinois_administration]]
 	for thread in threads:
 		thread.start()
@@ -84,7 +85,7 @@ def main(args):
 
 	if arguments.command == "setup":
 		from .setup_db import create
-		create(db)
+		create(db, "covidbot")
 	elif arguments.command == "scrape":
 		main_scrape(db)
 

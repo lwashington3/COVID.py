@@ -1,12 +1,17 @@
 from .county_tools import County
 from os import getenv
 import mysql.connector as sql
+from mysql.connector.connection_cext import CMySQLConnection
+from mysql.connector.errors import DatabaseError
 
 
-def create(db, new_user:str, host:str="localhost"):
+def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 	cursor = db.cursor(buffered=True)
 	for database in ("covid", "covid_gender", "covid_age_race", "covid_vaccine"):
-		cursor.execute(f"CREATE DATABASE {database}")
+		try:
+			cursor.execute(f"CREATE DATABASE {database}")
+		except DatabaseError:
+			pass
 		cursor.execute(f"GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES on {database}.* TO '{new_user}'@'{host}' WITH GRANT OPTION;")
 
 	cursor.execute("""CREATE TABLE covid.Overall(

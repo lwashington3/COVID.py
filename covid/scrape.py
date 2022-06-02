@@ -3,6 +3,7 @@ from .county_tools import *
 from datetime import date, timedelta as td
 from json import loads
 from requests import get
+from mysql.connector.connection_cext import CMySQLConnection
 
 
 def get_dates(day=None) -> tuple[date, str]:
@@ -11,7 +12,7 @@ def get_dates(day=None) -> tuple[date, str]:
 	return day, date_to_sql(day)
 
 
-def scrape_overall_data(db, add_each_entry=False):
+def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 	response = get(get_overall_data_link()).content
 	data = OverallData.from_json(loads(response))
 	cursor = db.cursor(buffered=True)
@@ -32,7 +33,7 @@ def scrape_overall_data(db, add_each_entry=False):
 	db.commit()
 
 
-def scrape_gender_data(db, county=County.Illinois):
+def scrape_gender_data(db:CMySQLConnection, county=County.Illinois):
 	if not isinstance(county, County):
 		raise ValueError(f"The given county when scraping the gender_data needs to be from the County Enum, not {county.__name__}")
 	response = get(get_age_race_link()).content
@@ -58,7 +59,7 @@ def scrape_gender_data(db, county=County.Illinois):
 	db.commit()
 
 
-def scrape_age_race_data(db, county=County.Illinois):
+def scrape_age_race_data(db:CMySQLConnection, county=County.Illinois):
 	if not isinstance(county, County):
 		raise ValueError(f"The given county when scraping the age_race_data needs to be from the County Enum, not {county.__name__}")
 	response = get(get_age_race_link()).content
@@ -81,7 +82,7 @@ def scrape_age_race_data(db, county=County.Illinois):
 	db.commit()
 
 
-def scrape_illinois_vaccine_data(db):
+def scrape_illinois_vaccine_data(db:CMySQLConnection):
 	cursor = db.cursor(buffered=True)
 	response = get(get_vaccine_details_link()).content
 	data = StateWideVaccine.from_json(loads(response))
@@ -100,7 +101,7 @@ def scrape_illinois_vaccine_data(db):
 	db.commit()
 
 
-def scrape_illinois_vaccine_administration(db, counties=(County.Illinois, County.Chicago)):
+def scrape_illinois_vaccine_administration(db:CMySQLConnection, counties=(County.Illinois, County.Chicago)):
 	cursor = db.cursor(buffered=True)
 	for county in counties:
 		response = get(county_to_link(get_vaccine_details_link(), county)).content
