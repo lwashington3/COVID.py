@@ -1360,7 +1360,7 @@ class StateWideVaccine:
 				self.administered_to_illinois_one_dose_65_plus_percent)
 
 	@classmethod
-	def from_json(cls, json:dct):
+	def from_json(cls, json:dict):
 		return cls(report_date=json["Report_Date"], total_doses=json["Total_Delivered"],
 					total_administered=json["Total_Administered"], persons_fully_vaccinated=json["Persons_Fully_Vaccinated"],
 					administered_rolling_average=json["AdministeredRollAvg"],

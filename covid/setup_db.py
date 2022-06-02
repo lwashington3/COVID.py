@@ -3,12 +3,11 @@ from os import getenv
 import mysql.connector as sql
 
 
-def create(db):
+def create(db, new_user:str, host:str="localhost"):
 	cursor = db.cursor(buffered=True)
-	cursor.execute("CREATE DATABASE covid")
-	cursor.execute("CREATE DATABASE covid_gender")
-	cursor.execute("CREATE DATABASE covid_age_race")
-	cursor.execute("CREATE DATABASE covid_vaccine")
+	for database in ("covid", "covid_gender", "covid_age_race", "covid_vaccine"):
+		cursor.execute(f"CREATE DATABASE {database}")
+		cursor.execute(f"GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES on {database}.* TO '{new_user}'@'{host}' WITH GRANT OPTION;")
 
 	cursor.execute("""CREATE TABLE covid.Overall(
 		date DATE NOT NULL UNIQUE PRIMARY KEY,
@@ -113,4 +112,4 @@ if __name__ == "__main__":
 	db = sql.connect(host="localhost",
 					 user="root",
 					 password=getenv("COVID_DB_PASSWORD"))
-	create(db)
+	create(db, "covidbot")
