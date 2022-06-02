@@ -2,7 +2,7 @@ from .county_tools import County
 from os import getenv
 import mysql.connector as sql
 from mysql.connector.connection_cext import CMySQLConnection
-from mysql.connector.errors import DatabaseError
+from mysql.connector.errors import DatabaseError, ProgrammingError
 
 
 def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
@@ -14,7 +14,8 @@ def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 			pass
 		cursor.execute(f"GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES on {database}.* TO '{new_user}'@'{host}' WITH GRANT OPTION;")
 
-	cursor.execute("""CREATE TABLE covid.Overall(
+	try:
+		cursor.execute("""CREATE TABLE covid.Overall(
 		date DATE NOT NULL UNIQUE PRIMARY KEY,
 		total_tested INT NOT NULL,
 		confirmed_cases INT NOT NULL,
@@ -26,6 +27,8 @@ def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 		confirmed_7_day_rolling_average DECIMAL(7, 3) NOT NULL,
 		deaths_7_day_rolling_average DECIMAL(6, 3) NOT NULL
 	)""")
+	except ProgrammingError:
+		pass
 
 	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
 		cursor.execute(f"""CREATE TABLE covid_gender.{table_name}(
@@ -38,20 +41,23 @@ def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 
 	# nh_pi is Native Hawaiian or Other Pacific Islander
 	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
-		cursor.execute(f"""CREATE TABLE covid_age_race.{table_name}(
-			date DATE NOT NULL,
-			age_group VARCHAR(7) NOT NULL
-			american_indian INT NOT NULL,
-			nh_pi INT NOT NULL,
-			hispanic INT NOT NULL,
-			asian INT NOT NULL,
-			other INT NOT NULL,
-			left_blank INT NOT NULL,
-			black INT NOT NULL,
-			white INT NOT NULL,
-			total INT,
-			PRIMARY KEY (date, age_group)
-		)""")
+		try:
+			cursor.execute(f"""CREATE TABLE covid_age_race.{table_name}(
+				date DATE NOT NULL,
+				age_group VARCHAR(7) NOT NULL,
+				american_indian INT NOT NULL,
+				nh_pi INT NOT NULL,
+				hispanic INT NOT NULL,
+				asian INT NOT NULL,
+				other INT NOT NULL,
+				left_blank INT NOT NULL,
+				black INT NOT NULL,
+				white INT NOT NULL,
+				total INT,
+				PRIMARY KEY (date, age_group)
+				)""")
+		except ProgrammingError:
+			continue
 
 	for county in (County.Illinois, County.Chicago):
 		cursor.execute(f"""CREATE TABLE covid_vaccine.{county.value}_administration(
