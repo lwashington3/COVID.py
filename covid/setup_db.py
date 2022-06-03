@@ -1,4 +1,4 @@
-from .county_tools import County
+from .county_tools import County, county_to_sql
 from os import getenv
 import mysql.connector as sql
 from mysql.connector.connection_cext import CMySQLConnection
@@ -12,7 +12,7 @@ def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 			cursor.execute(f"CREATE DATABASE {database}")
 		except DatabaseError:
 			pass
-		cursor.execute(f"GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES on {database}.* TO '{new_user}'@'{host}' WITH GRANT OPTION;")
+		cursor.execute(f"GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES on {database}.* TO '{new_user}'@'{host}';")
 
 	try:
 		cursor.execute("""CREATE TABLE covid.Overall(
@@ -31,13 +31,15 @@ def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 		pass
 
 	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
-		cursor.execute(f"""CREATE TABLE covid_gender.{table_name}(
-			date DATE NOT NULL UNIQUE PRIMARY KEY,
-			female INT NOT NULL,
-			male INT NOT NULL,
-			unknown INT NOT NULL,
-			total INT NOT NULL 
-		)""")
+		try:
+			cursor.execute(f"""CREATE TABLE covid_gender.{table_name}(
+				date DATE NOT NULL UNIQUE PRIMARY KEY,
+				female INT NOT NULL,
+				male INT NOT NULL,
+				unknown INT NOT NULL,
+				total INT NOT NULL)""")
+		except ProgrammingError:
+			continue
 
 	# nh_pi is Native Hawaiian or Other Pacific Islander
 	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
@@ -60,61 +62,65 @@ def create(db:CMySQLConnection, new_user:str, host:str="localhost"):
 			continue
 
 	for county in (County.Illinois, County.Chicago):
-		cursor.execute(f"""CREATE TABLE covid_vaccine.{county.value}_administration(
-			date DATE NOT NULL UNIQUE PRIMARY KEY,
-			administered_vaccine_doses INT NOT NULL,
-			count_7_day_rolling_average INT NOT NULL,
-			population INT NOT NULL,
-			population_one_dose INT NOT NULL,
-			population_one_dose_percentage DECIMAL(4, 2) NOT NULL,
-			population_fully_vaccinated INT NOT NULL,
-			population_fully_vaccinated_percentage DECIMAL(4, 2) NOT NULL,
-			booster_doses INT NOT NULL,
-			allocated_doses INT NOT NULL,
-			inventory_report_date DATE NOT NULL,
-			lhd_reported_inventory INT NOT NULL,
-			community_reported_inventory INT NOT NULL,
-			total_reported_inventory INT NOT NULL
-		)""")
+		try:
+			cursor.execute(f"""CREATE TABLE covid_vaccine.{county_to_sql(county)}_administration(
+				date DATE NOT NULL UNIQUE PRIMARY KEY,
+				administered_vaccine_doses INT NOT NULL,
+				count_7_day_rolling_average INT NOT NULL,
+				population INT NOT NULL,
+				population_one_dose INT NOT NULL,
+				population_one_dose_percentage DECIMAL(4, 2) NOT NULL,
+				population_fully_vaccinated INT NOT NULL,
+				population_fully_vaccinated_percentage DECIMAL(4, 2) NOT NULL,
+				booster_doses INT NOT NULL,
+				allocated_doses INT NOT NULL,
+				inventory_report_date DATE NOT NULL,
+				lhd_reported_inventory INT NOT NULL,
+				community_reported_inventory INT NOT NULL,
+				total_reported_inventory INT NOT NULL)""")
+		except ProgrammingError:
+			pass
 
-	cursor.execute("""CREATE TABLE covid_vaccine.Illinois(
-		date DATE NOT NULL UNIQUE PRIMARY KEY,
-		total_doses INT NOT NULL,
-		total_administered_doses INT NOT NULL,
-		weekly_rolling_average INT NOT NULL,
-		illinoisans_fully_vaccinated_5_up INT NOT NULL,
-		illinoisans_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_at_least_one_dose_5_up INT NOT NULL,
-		illinoisans_at_least_one_dose_5_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_fully_vaccinated_12_up INT NOT NULL,
-		illinoisans_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_at_least_one_dose_12_up INT NOT NULL,
-		illinoisans_at_least_one_does_12_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_fully_vaccinated_18_up INT NOT NULL,
-		illinoisans_fully_vaccinated_18_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_at_least_one_dose_18_up INT NOT NULL,
-		illinoisans_at_least_one_does_18_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_fully_vaccinated_65_up INT NOT NULL,
-		illinoisans_fully_vaccinated_65_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinoisans_at_least_one_dose_65_up INT NOT NULL,
-		illinoisans_at_least_one_does_65_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_fully_vaccinated_5_up INT NOT NULL,          
-		illinois_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_at_least_one_dose_5_up INT NOT NULL,          
-		illinois_at_least_one_dose_5_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_fully_vaccinated_12_up INT NOT NULL,          
-		illinois_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_at_least_one_dose_12_up INT NOT NULL,          
-		illinois_at_least_one_does_12_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_fully_vaccinated_18_up INT NOT NULL,          
-		illinois_fully_vaccinated_18_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_at_least_one_dose_18_up INT NOT NULL,          
-		illinois_at_least_one_does_18_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_fully_vaccinated_65_up INT NOT NULL,          
-		illinois_fully_vaccinated_65_up_percentage DECIMAL(3, 1) NOT NULL,
-		illinois_at_least_one_dose_65_up INT NOT NULL,          
-		illinois_at_least_one_does_65_up_percentage DECIMAL(3, 1) NOT NULL,
-	)""")
+	try:
+		cursor.execute("""CREATE TABLE covid_vaccine.Illinois(
+			date DATE NOT NULL UNIQUE PRIMARY KEY,
+			total_doses INT NOT NULL,
+			total_administered_doses INT NOT NULL,
+			weekly_rolling_average INT NOT NULL,
+			illinoisans_fully_vaccinated_5_up INT NOT NULL,
+			illinoisans_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_at_least_one_dose_5_up INT NOT NULL,
+			illinoisans_at_least_one_dose_5_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_fully_vaccinated_12_up INT NOT NULL,
+			illinoisans_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_at_least_one_dose_12_up INT NOT NULL,
+			illinoisans_at_least_one_does_12_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_fully_vaccinated_18_up INT NOT NULL,
+			illinoisans_fully_vaccinated_18_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_at_least_one_dose_18_up INT NOT NULL,
+			illinoisans_at_least_one_does_18_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_fully_vaccinated_65_up INT NOT NULL,
+			illinoisans_fully_vaccinated_65_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinoisans_at_least_one_dose_65_up INT NOT NULL,
+			illinoisans_at_least_one_does_65_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_fully_vaccinated_5_up INT NOT NULL,          
+			illinois_fully_vaccinated_5_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_at_least_one_dose_5_up INT NOT NULL,          
+			illinois_at_least_one_dose_5_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_fully_vaccinated_12_up INT NOT NULL,          
+			illinois_fully_vaccinated_12_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_at_least_one_dose_12_up INT NOT NULL,          
+			illinois_at_least_one_does_12_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_fully_vaccinated_18_up INT NOT NULL,          
+			illinois_fully_vaccinated_18_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_at_least_one_dose_18_up INT NOT NULL,          
+			illinois_at_least_one_does_18_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_fully_vaccinated_65_up INT NOT NULL,          
+			illinois_fully_vaccinated_65_up_percentage DECIMAL(3, 1) NOT NULL,
+			illinois_at_least_one_dose_65_up INT NOT NULL,          
+			illinois_at_least_one_does_65_up_percentage DECIMAL(3, 1) NOT NULL)""")
+	except ProgrammingError:
+		pass
 
 	db.commit()
 

@@ -38,7 +38,7 @@ def illinois_administration(db:CMySQLConnection):
 
 
 def main_scrape(db:CMySQLConnection):
-	threads = [Thread(target=func, args=(db)) for func in [scrape_overall, scrape_gender, age_race, illinois_vaccine, illinois_administration]]
+	threads = [Thread(target=func, args=[db]) for func in [scrape_overall, scrape_gender, age_race, illinois_vaccine, illinois_administration]]
 	for thread in threads:
 		thread.start()
 	for thread in threads:
@@ -60,6 +60,12 @@ def _create_scrape_parser(parser_factory):
 	_add_common_options(parser)
 
 
+def _create_backup_parser(parser_factory):
+	parser = parser_factory("backup", help="Backup the database to a file.")
+	_add_common_options(parser)
+	parser.add_argument("-d", "--directory", help="The directory to save the backup.")
+
+
 def create_argument_parser():
 	parser = ArgumentParser(prog="COVID.py")
 	subparsers = parser.add_subparsers()
@@ -67,14 +73,16 @@ def create_argument_parser():
 	subparsers.required = False
 	_create_scrape_parser(subparsers.add_parser)
 	_create_setup_parser(subparsers.add_parser)
+	_create_backup_parser(subparsers.add_parser)
 	return parser
 
 
 def main(args):
 	parser = create_argument_parser()
 	arguments = parser.parse_args(args)
-	if arguments.command not in ("setup", "scrape"):
-		print("You gave an unknown command, try again.")
+	possible_commands = ("setup", "scrape", "backup")
+	if arguments.command not in possible_commands:
+		print(f"You gave an unknown command, try again. The command must be one of the following: {possible_commands}")
 		return
 
 	username = arguments.username if arguments.username is not None else "covidbot"
@@ -88,6 +96,9 @@ def main(args):
 		create(db, "covidbot")
 	elif arguments.command == "scrape":
 		main_scrape(db)
+	elif arguments.command == "backup":
+		from .backup import backup
+		backup(db, backup_dir=arguments.directory)
 
 
 if __name__ == "__main__":

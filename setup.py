@@ -11,7 +11,7 @@ git_url = "https://github.com/lwashington3/COVID.py"
 
 setup(
 	name="COVID Data Scraper",
-	version="1.0.5",
+	version="1.0.6",
 	author="Len Washington III",
 	author_email="l.washingtoniii.27@gmail.com",
 	description="Daily Corona Scraper from the Illinois Department of Public Health",
