@@ -1,3 +1,4 @@
 .env
 winvenv/
 .idea/
+setup.sh

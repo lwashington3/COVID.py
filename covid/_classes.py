@@ -10,9 +10,12 @@ def iter_check(obj, type_name, name=None):
 	return obj if isinstance(obj, list) else list(obj)
 
 
-def json_to_date(json) -> date:
-	test_date = f"{json['testDate']['year']}-{json['testDate']['month']}-{json['testDate']['day']}"
-	return dt.strptime(test_date, "%Y-%m-%d").date()
+def json_to_date(json:dict|str) -> date:
+	if isinstance(json, dict):
+		test_date = f"{json['year']}-{json['month']}-{json['day']}"
+		# return dt.strptime(test_date, "%Y-%m-%d").date()
+	else:
+		return dt.strptime(json, "%Y-%m-%dT00:00:00").date()
 
 
 def date_to_sql(day:date) -> str:
@@ -131,7 +134,7 @@ class IllinoisTestingResults:
 	def deaths_7_day_rolling_avg(self, deaths_7_day_rolling_avg: float):
 		if not isinstance(deaths_7_day_rolling_avg, float):
 			deaths_7_day_rolling_avg = float(deaths_7_day_rolling_avg)
-		self.deaths_7_day_rolling_avg = deaths_7_day_rolling_avg
+		self._deaths_7_day_rolling_avg = deaths_7_day_rolling_avg
 
 	def value_tuple(self) -> tuple:
 		return (self.test_date.strftime("%Y-%m-%d"), self.total_tested, self.confirmed_cases, self.deaths, self.tested_change,
@@ -575,7 +578,7 @@ class Race:
 	def color(self, color: str):
 		if not isinstance(color, str):
 			color = str(color)
-		self.color = color
+		self._color = color
 
 	@classmethod
 	def from_json(cls, json:dict):
@@ -723,7 +726,7 @@ class Gender:
 	def color(self, color: str):
 		if not isinstance(color, str):
 			color = str(color)
-		self.color = color
+		self._color = color
 
 	@classmethod
 	def from_json(cls, json:dict):
