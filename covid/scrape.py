@@ -16,7 +16,7 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 	response = get(get_overall_data_link()).content
 	data = OverallData.from_json(loads(response))
 	cursor = db.cursor(buffered=True)
-	sql_format = "INSERT INTO covid.OVERALL VALUES('%s',%d,%d,%d,%d,%d,%d,%f,%f,%f)"
+	sql_format = "INSERT INTO covid.OVERALL VALUES('%s',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 	today, sql_today = get_dates()
 
 	if add_each_entry:
@@ -28,7 +28,7 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 
 		row = data[today]
 		if row is None:
-			raise ValueError(f"Cannot find the state testing results for today, {today:%B %d, %Y}")
+			return  # raise ValueError(f"Cannot find the state testing results for today, {today:%B %d, %Y}")
 		cursor.execute(sql_format, row.value_tuple())
 	db.commit()
 
@@ -43,13 +43,13 @@ def scrape_gender_data(db:CMySQLConnection, county=County.Illinois):
 	today, sql_today = get_dates()
 	genders = county_data.demographics.genders
 
-	for table_name, property_name in zip(("Confirmed_Cases", "Tested", "Deaths"), ("count", "tested", "deaths")):
-		sql_format = f"INSERT INTO covid_gender.{table_name} VALUES('%s',%d,%d,%d,%d)"
+	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
+		sql_format = f"INSERT INTO covid_gender.{table_name} VALUES('%s',%s,%s,%s,%s)"
 		cursor.execute(f"SELECT COUNT(*) FROM covid_gender.{table_name} WHERE date = '{sql_today}'")
 		if cursor.fetchone()[0]:
 			continue
 
-		dct = {gender.description: getattr(gender, property_name) for gender in genders}
+		dct = {gender.description: getattr(gender, table_name.lower()) for gender in genders}
 		female = dct["Female"]
 		male = dct["Male"]
 		unknown = dct["Unknown/Left Blank"]
@@ -69,7 +69,7 @@ def scrape_age_race_data(db:CMySQLConnection, county=County.Illinois):
 	today, sql_today = get_dates()
 
 	for table_name, property_name in zip(("Confirmed_Cases", "Tested", "Deaths"), ("count", "tested", "deaths")):
-		sql_format = f"INSERT INTO covid_age_race.{table_name} VALUES('%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d)"
+		sql_format = f"INSERT INTO covid_age_race.{table_name} VALUES('%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 		cursor.execute(f"SELECT COUNT(*) FROM covid_age_race.{table_name} WHERE date = '{sql_today}'")
 		if cursor.fetchone()[0]:
 			continue
@@ -94,8 +94,8 @@ def scrape_illinois_vaccine_data(db:CMySQLConnection):
 
 	last_upload = last_upload[0]
 	if last_upload != data.report_date:
-		illinoise = ('%d,%f,'*32).strip(",")
-		sql_format = f"INSERT INTO covid_vaccine.Illinois VALUES('%s',%d,%d,%d,{illinoise})"
+		illinoise = ('%s,%s,'*32).strip(",")
+		sql_format = f"INSERT INTO covid_vaccine.Illinois VALUES('%s',%s,%s,%s,{illinoise})"
 		cursor.execute(sql_format, [date_to_sql(last_upload)].extend(data.value_tuple()))
 
 	db.commit()
@@ -124,6 +124,6 @@ def scrape_illinois_vaccine_administration(db:CMySQLConnection, counties=(County
 		if up_to_date:
 			continue
 
-		sql_format = f"INSERT INTO covid_vaccine.{county.value}_administration VALUES('%s',%d,%d,%d,%d,%f,%d,%f,%d,%d,'%s',%d,%d,%d)"
+		sql_format = f"INSERT INTO covid_vaccine.{county.value}_administration VALUES('%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,'%s',%s,%s,%s)"
 		cursor.execute(sql_format, [date_to_sql(administration.report_date)].extend(administration))
 	db.commit()

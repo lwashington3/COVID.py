@@ -13,7 +13,7 @@ def iter_check(obj, type_name, name=None):
 def json_to_date(json:dict|str) -> date:
 	if isinstance(json, dict):
 		test_date = f"{json['year']}-{json['month']}-{json['day']}"
-		# return dt.strptime(test_date, "%Y-%m-%d").date()
+		return dt.strptime(test_date, "%Y-%m-%d").date()
 	else:
 		return dt.strptime(json, "%Y-%m-%dT00:00:00").date()
 
@@ -181,7 +181,7 @@ class OverallData:
 	@last_updated_date.setter
 	def last_updated_date(self, last_updated_date: date):
 		if not isinstance(last_updated_date, date):
-			raise ValueError(f"The last updated date must be a datetime.date object, not: {last_updated_date.__name__}")
+			raise ValueError(f"The last updated date must be a datetime.date object, not: {last_updated_date.__class__.__name__}")
 		self._last_updated_date = last_updated_date
 
 	@property
