@@ -22,11 +22,11 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 	if add_each_entry:
 		cursor.executemany(sql_format, [testing_result.value_tuple() for testing_result in data.state_testing_results])
 	else:
-		cursor.execute(f"SELECT COUNT(*) FROM covid.OVERALL WHERE date = '{sql_today}'")
+		cursor.execute(f"SELECT COUNT(*) FROM covid.Overall WHERE date = '{sql_today}'")
 		if cursor.fetchone()[0]:
 			return
 
-		row = data.state_testing_results[today]
+		row = data[today]
 		if row is None:
 			raise ValueError(f"Cannot find the state testing results for today, {today:%B %d, %Y}")
 		cursor.execute(sql_format, row.value_tuple())

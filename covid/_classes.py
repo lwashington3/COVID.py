@@ -164,7 +164,6 @@ class OverallData:
 	def __iter__(self):
 		for testing_result in self.state_testing_results:
 			yield testing_result
-		raise StopIteration
 
 	def __getitem__(self, item):
 		if isinstance(item, int):
@@ -475,7 +474,6 @@ class Administration:
 	def __iter__(self):
 		for vaccine_admin in self.vaccine_administrations:
 			yield vaccine_admin
-		raise StopIteration
 
 	def __getitem__(self, item) -> VaccineAdministration | None:
 		if isinstance(item, int):
@@ -840,7 +838,6 @@ class Root:
 	def __iter__(self):
 		for demographic in self.county_demographics:
 			yield demographic
-		raise StopIteration
 
 	def __getitem__(self, item) -> CountyDemographic | None:
 		if isinstance(item, int):
