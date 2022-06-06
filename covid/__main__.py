@@ -38,7 +38,7 @@ def illinois_administration(db:CMySQLConnection):
 
 
 def main_scrape(db:CMySQLConnection):
-	threads = [Thread(target=func, args=[db]) for func in [scrape_overall]] #, scrape_gender, age_race, illinois_vaccine, illinois_administration]]
+	threads = [Thread(target=func, args=[db]) for func in [scrape_overall, scrape_gender, age_race]]  # , illinois_vaccine, illinois_administration]]
 	for thread in threads:
 		thread.start()
 	for thread in threads:

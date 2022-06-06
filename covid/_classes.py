@@ -612,7 +612,7 @@ class Age:
 	def age_group(self, age_group:str):
 		if not isinstance(age_group, str):
 			age_group = str(age_group)
-		self._age_group = age_group
+		self._age_group = age_group.strip()
 
 	@property
 	def confirmed_cases(self) -> int:
