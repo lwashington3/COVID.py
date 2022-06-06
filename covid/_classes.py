@@ -380,21 +380,21 @@ class VaccineAdministration:
 
 	@property
 	def percent_vaccinated_population(self) -> float:
-		return self._ercent_vaccinated_population
+		return self._percent_vaccinated_population
 
 	@percent_vaccinated_population.setter
 	def percent_vaccinated_population(self, percent_vaccinated_population:float):
-		if not isinstance(percent_vaccinated_population, int):
+		if not isinstance(percent_vaccinated_population, float):
 			percent_vaccinated_population = float(percent_vaccinated_population)
 		self._percent_vaccinated_population = percent_vaccinated_population
 
 	@property
 	def percent_vaccinated_one_dose_population(self) -> float:
-		return self._ercent_vaccinated_one_dose_population
+		return self._percent_vaccinated_one_dose_population
 
 	@percent_vaccinated_one_dose_population.setter
 	def percent_vaccinated_one_dose_population(self, percent_vaccinated_one_dose_population: float):
-		if not isinstance(percent_vaccinated_one_dose_population, int):
+		if not isinstance(percent_vaccinated_one_dose_population, float):
 			percent_vaccinated_one_dose_population = float(percent_vaccinated_one_dose_population)
 		self._percent_vaccinated_one_dose_population = percent_vaccinated_one_dose_population
 
@@ -456,13 +456,14 @@ class VaccineAdministration:
 				   persons_vaccinated_one_dose_change=json["PersonsVaccinatedOneDoseChange"],
 				   booster_dose_administered=json["BoosterDoseAdministered"],
 				   booster_dose_administered_change=json["BoosterDoseAdministeredChange"],
-				   report_date=json["Report_Date"], population=json["Population"],
+				   report_date=json_to_date(json["Report_Date"]), population=json["Population"],
 				   percent_vaccinated_population=json["PctVaccinatedPopulation"],
-				   percent_vaccinated_one_dose_population=["PctVaccinatedOneDosePopulation"],
+				   percent_vaccinated_one_dose_population=json["PctVaccinatedOneDosePopulation"],
 				   longitude=json["Longitude"], latitude=json["Latitude"],
 				   lhd_reported_inventory=json["LHDReportedInventory"],
 				   community_reported_inventory=json["CommunityReportedInventory"],
-				   total_reported_inventory=json["TotalReportedInventory"], inventory_report_date=json["InventoryReportDate"])
+				   total_reported_inventory=json["TotalReportedInventory"],
+				   inventory_report_date=json_to_date(json["InventoryReportDate"]))
 
 
 class Administration:
@@ -474,6 +475,9 @@ class Administration:
 	def __iter__(self):
 		for vaccine_admin in self.vaccine_administrations:
 			yield vaccine_admin
+
+	def __len__(self):
+		return len(self.vaccine_administrations)
 
 	def __getitem__(self, item) -> VaccineAdministration | None:
 		if isinstance(item, int):
@@ -515,8 +519,8 @@ class Administration:
 	@classmethod
 	def from_json(cls, json:dict):
 		last_updated_date = json_to_date(json["lastUpdatedDate"])
-		vaccine_administrations = [VaccineAdministration.from_json(administration) for administration in json["CurrentVaccineAdministration"]]
-		current_vaccine_administration = VaccineAdministration.from_json(json["VaccineAdministration"])
+		vaccine_administrations = [VaccineAdministration.from_json(administration) for administration in json["VaccineAdministration"]]
+		current_vaccine_administration = VaccineAdministration.from_json(json["CurrentVaccineAdministration"])
 		return cls(last_updated_date, vaccine_administrations, current_vaccine_administration)
 
 

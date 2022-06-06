@@ -91,14 +91,16 @@ def scrape_illinois_vaccine_data(db:CMySQLConnection):
 
 	cursor.execute(f"SELECT date FROM covid_vaccine.Illinois ORDER BY date DESC")
 	last_upload = cursor.fetchone()
-	if not len(last_upload):
+	if last_upload is not None and not len(last_upload):
 		return
 
-	last_upload = last_upload[0]
+	last_upload = last_upload[0] if last_upload is not None else None
 	if last_upload != data.report_date:
-		illinoise = ("%s,%s,"*32).strip(",")
+		illinoise = ("%s,"*32).strip(",")
 		sql_format = f"INSERT INTO covid_vaccine.Illinois VALUES(%s,%s,%s,%s,{illinoise})"
-		cursor.execute(sql_format, [date_to_sql(last_upload)].extend(data.value_tuple()))
+		lst = [date_to_sql(data.report_date)]
+		lst.extend(data.value_tuple())
+		cursor.execute(sql_format, lst)
 
 	db.commit()
 
@@ -106,7 +108,7 @@ def scrape_illinois_vaccine_data(db:CMySQLConnection):
 def scrape_illinois_vaccine_administration(db:CMySQLConnection, counties=(County.Illinois, County.Chicago)):
 	cursor = db.cursor(buffered=True)
 	for county in counties:
-		response = get(county_to_link(get_vaccine_details_link(), county)).content
+		response = get(county_to_link(get_vaccine_administration_link(), county)).content
 		administrations = Administration.from_json(loads(response))
 		today, sql_today = get_dates()
 		yesterday = today - td(days=1)
@@ -119,7 +121,9 @@ def scrape_illinois_vaccine_administration(db:CMySQLConnection, counties=(County
 		cursor.execute(f"SELECT date FROM covid_vaccine.{county.value}_administration ORDER BY date DESC")
 		lst = cursor.fetchone()
 		up_to_date = True
-		if not len(lst):
+		if lst is None:
+			up_to_date = False
+		elif not len(lst):
 			up_to_date = False
 		elif lst[0] != administration.report_date:
 			up_to_date = False
@@ -127,5 +131,7 @@ def scrape_illinois_vaccine_administration(db:CMySQLConnection, counties=(County
 			continue
 
 		sql_format = f"INSERT INTO covid_vaccine.{county.value}_administration VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-		cursor.execute(sql_format, [date_to_sql(administration.report_date)].extend(administration))
+		lst = [date_to_sql(administration.report_date)]
+		lst.extend(administration.value_tuple())
+		cursor.execute(sql_format, lst)
 	db.commit()

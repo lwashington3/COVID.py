@@ -133,7 +133,7 @@ class County(Enum):
 
 
 def county_to_link(link:str, county:County) -> str:
-	return link + "/" if not link.endswith("/") else "" + county.value.replace(" ", "%20")
+	return link + county.value.replace(" ", "%20")
 
 
 def county_to_sql(county:County) -> str:
