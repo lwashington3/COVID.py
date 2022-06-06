@@ -992,7 +992,7 @@ class StateWideVaccine:
 	# region Fully Vaccinated Administered to Illinois
 	@property
 	def administered_to_illinois_fully_vaccinated_5_plus(self) -> int:
-		return self._dministered_to_illinois_fully_vaccinated_5_plus
+		return self._administered_to_illinois_fully_vaccinated_5_plus
 
 	@administered_to_illinois_fully_vaccinated_5_plus.setter
 	def administered_to_illinois_fully_vaccinated_5_plus(self, administered_to_illinois_fully_vaccinated_5_plus:int):
@@ -1002,17 +1002,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_fully_vaccinated_5_plus_percent(self) -> float:
-		return self._dministered_to_illinois_fully_vaccinated_5_plus_percent
+		return self._administered_to_illinois_fully_vaccinated_5_plus_percent
 
 	@administered_to_illinois_fully_vaccinated_5_plus_percent.setter
 	def administered_to_illinois_fully_vaccinated_5_plus_percent(self, administered_to_illinois_fully_vaccinated_5_plus_percent: float):
 		if not isinstance(administered_to_illinois_fully_vaccinated_5_plus_percent, float):
 			administered_to_illinois_fully_vaccinated_5_plus_percent = float(administered_to_illinois_fully_vaccinated_5_plus_percent)
-		self.administered_to_illinois_fully_vaccinated_5_plus_percent = administered_to_illinois_fully_vaccinated_5_plus_percent
+		self._administered_to_illinois_fully_vaccinated_5_plus_percent = administered_to_illinois_fully_vaccinated_5_plus_percent
 
 	@property
 	def administered_to_illinois_fully_vaccinated_12_plus(self) -> int:
-		return self._dministered_to_illinois_fully_vaccinated_12_plus
+		return self._administered_to_illinois_fully_vaccinated_12_plus
 
 	@administered_to_illinois_fully_vaccinated_12_plus.setter
 	def administered_to_illinois_fully_vaccinated_12_plus(self, administered_to_illinois_fully_vaccinated_12_plus:int):
@@ -1022,17 +1022,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_fully_vaccinated_12_plus_percent(self) -> float:
-		return self._dministered_to_illinois_fully_vaccinated_12_plus_percent
+		return self._administered_to_illinois_fully_vaccinated_12_plus_percent
 
 	@administered_to_illinois_fully_vaccinated_12_plus_percent.setter
 	def administered_to_illinois_fully_vaccinated_12_plus_percent(self, administered_to_illinois_fully_vaccinated_12_plus_percent: float):
 		if not isinstance(administered_to_illinois_fully_vaccinated_12_plus_percent, float):
 			administered_to_illinois_fully_vaccinated_12_plus_percent = float(administered_to_illinois_fully_vaccinated_12_plus_percent)
-		self.administered_to_illinois_fully_vaccinated_12_plus_percent = administered_to_illinois_fully_vaccinated_12_plus_percent
+		self._administered_to_illinois_fully_vaccinated_12_plus_percent = administered_to_illinois_fully_vaccinated_12_plus_percent
 
 	@property
 	def administered_to_illinois_fully_vaccinated_18_plus(self) -> int:
-		return self._dministered_to_illinois_fully_vaccinated_18_plus
+		return self._administered_to_illinois_fully_vaccinated_18_plus
 
 	@administered_to_illinois_fully_vaccinated_18_plus.setter
 	def administered_to_illinois_fully_vaccinated_18_plus(self, administered_to_illinois_fully_vaccinated_18_plus:int):
@@ -1042,17 +1042,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_fully_vaccinated_18_plus_percent(self) -> float:
-		return self._dministered_to_illinois_fully_vaccinated_18_plus_percent
+		return self._administered_to_illinois_fully_vaccinated_18_plus_percent
 
 	@administered_to_illinois_fully_vaccinated_18_plus_percent.setter
 	def administered_to_illinois_fully_vaccinated_18_plus_percent(self, administered_to_illinois_fully_vaccinated_18_plus_percent: float):
 		if not isinstance(administered_to_illinois_fully_vaccinated_18_plus_percent, float):
 			administered_to_illinois_fully_vaccinated_18_plus_percent = float(administered_to_illinois_fully_vaccinated_18_plus_percent)
-		self.administered_to_illinois_fully_vaccinated_18_plus_percent = administered_to_illinois_fully_vaccinated_18_plus_percent
+		self._administered_to_illinois_fully_vaccinated_18_plus_percent = administered_to_illinois_fully_vaccinated_18_plus_percent
 
 	@property
 	def administered_to_illinois_fully_vaccinated_65_plus(self) -> int:
-		return self._dministered_to_illinois_fully_vaccinated_65_plus
+		return self._administered_to_illinois_fully_vaccinated_65_plus
 
 	@administered_to_illinois_fully_vaccinated_65_plus.setter
 	def administered_to_illinois_fully_vaccinated_65_plus(self, administered_to_illinois_fully_vaccinated_65_plus:int):
@@ -1062,13 +1062,13 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_fully_vaccinated_65_plus_percent(self) -> float:
-		return self._dministered_to_illinois_fully_vaccinated_65_plus_percent
+		return self._administered_to_illinois_fully_vaccinated_65_plus_percent
 
 	@administered_to_illinois_fully_vaccinated_65_plus_percent.setter
 	def administered_to_illinois_fully_vaccinated_65_plus_percent(self, administered_to_illinois_fully_vaccinated_65_plus_percent: float):
 		if not isinstance(administered_to_illinois_fully_vaccinated_65_plus_percent, float):
 			administered_to_illinois_fully_vaccinated_65_plus_percent = float(administered_to_illinois_fully_vaccinated_65_plus_percent)
-		self.administered_to_illinois_fully_vaccinated_65_plus_percent = administered_to_illinois_fully_vaccinated_65_plus_percent
+		self._administered_to_illinois_fully_vaccinated_65_plus_percent = administered_to_illinois_fully_vaccinated_65_plus_percent
 	# endregion
 
 	# region Fully Vaccinated Administered to Illinoisans
@@ -1084,17 +1084,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_5_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_fully_vaccinated_5_plus_percent
+		return self._administered_to_illinoisans_fully_vaccinated_5_plus_percent
 
 	@administered_to_illinoisans_fully_vaccinated_5_plus_percent.setter
 	def administered_to_illinoisans_fully_vaccinated_5_plus_percent(self, administered_to_illinoisans_fully_vaccinated_5_plus_percent: float):
 		if not isinstance(administered_to_illinoisans_fully_vaccinated_5_plus_percent, float):
 			administered_to_illinoisans_fully_vaccinated_5_plus_percent = float(administered_to_illinoisans_fully_vaccinated_5_plus_percent)
-		self.administered_to_illinoisans_fully_vaccinated_5_plus_percent = administered_to_illinoisans_fully_vaccinated_5_plus_percent
+		self._administered_to_illinoisans_fully_vaccinated_5_plus_percent = administered_to_illinoisans_fully_vaccinated_5_plus_percent
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_12_plus(self) -> int:
-		return self._dministered_to_illinoisans_fully_vaccinated_12_plus
+		return self._administered_to_illinoisans_fully_vaccinated_12_plus
 
 	@administered_to_illinoisans_fully_vaccinated_12_plus.setter
 	def administered_to_illinoisans_fully_vaccinated_12_plus(self, administered_to_illinoisans_fully_vaccinated_12_plus: int):
@@ -1104,17 +1104,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_12_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_fully_vaccinated_12_plus_percent
+		return self._administered_to_illinoisans_fully_vaccinated_12_plus_percent
 
 	@administered_to_illinoisans_fully_vaccinated_12_plus_percent.setter
 	def administered_to_illinoisans_fully_vaccinated_12_plus_percent(self, administered_to_illinoisans_fully_vaccinated_12_plus_percent: float):
 		if not isinstance(administered_to_illinoisans_fully_vaccinated_12_plus_percent, float):
 			administered_to_illinoisans_fully_vaccinated_12_plus_percent = float(administered_to_illinoisans_fully_vaccinated_12_plus_percent)
-		self.administered_to_illinoisans_fully_vaccinated_12_plus_percent = administered_to_illinoisans_fully_vaccinated_12_plus_percent
+		self._administered_to_illinoisans_fully_vaccinated_12_plus_percent = administered_to_illinoisans_fully_vaccinated_12_plus_percent
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_18_plus(self) -> int:
-		return self._dministered_to_illinoisans_fully_vaccinated_18_plus
+		return self._administered_to_illinoisans_fully_vaccinated_18_plus
 
 	@administered_to_illinoisans_fully_vaccinated_18_plus.setter
 	def administered_to_illinoisans_fully_vaccinated_18_plus(self, administered_to_illinoisans_fully_vaccinated_18_plus: int):
@@ -1124,17 +1124,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_18_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_fully_vaccinated_18_plus_percent
+		return self._administered_to_illinoisans_fully_vaccinated_18_plus_percent
 
 	@administered_to_illinoisans_fully_vaccinated_18_plus_percent.setter
 	def administered_to_illinoisans_fully_vaccinated_18_plus_percent(self, administered_to_illinoisans_fully_vaccinated_18_plus_percent: float):
 		if not isinstance(administered_to_illinoisans_fully_vaccinated_18_plus_percent, float):
 			administered_to_illinoisans_fully_vaccinated_18_plus_percent = float(administered_to_illinoisans_fully_vaccinated_18_plus_percent)
-		self.administered_to_illinoisans_fully_vaccinated_18_plus_percent = administered_to_illinoisans_fully_vaccinated_18_plus_percent
+		self._administered_to_illinoisans_fully_vaccinated_18_plus_percent = administered_to_illinoisans_fully_vaccinated_18_plus_percent
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_65_plus(self) -> int:
-		return self._dministered_to_illinoisans_fully_vaccinated_65_plus
+		return self._administered_to_illinoisans_fully_vaccinated_65_plus
 
 	@administered_to_illinoisans_fully_vaccinated_65_plus.setter
 	def administered_to_illinoisans_fully_vaccinated_65_plus(self, administered_to_illinoisans_fully_vaccinated_65_plus: int):
@@ -1144,7 +1144,7 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_fully_vaccinated_65_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_fully_vaccinated_65_plus_percent
+		return self._administered_to_illinoisans_fully_vaccinated_65_plus_percent
 
 	@administered_to_illinoisans_fully_vaccinated_65_plus_percent.setter
 	def administered_to_illinoisans_fully_vaccinated_65_plus_percent(self, administered_to_illinoisans_fully_vaccinated_65_plus_percent: float):
@@ -1156,7 +1156,7 @@ class StateWideVaccine:
 	# region One Dose Administered to Illinois
 	@property
 	def administered_to_illinois_one_dose_5_plus(self) -> int:
-		return self._dministered_to_illinois_one_dose_5_plus
+		return self._administered_to_illinois_one_dose_5_plus
 
 	@administered_to_illinois_one_dose_5_plus.setter
 	def administered_to_illinois_one_dose_5_plus(self, administered_to_illinois_one_dose_5_plus: int):
@@ -1166,17 +1166,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_one_dose_5_plus_percent(self) -> float:
-		return self._dministered_to_illinois_one_dose_5_plus_percent
+		return self._administered_to_illinois_one_dose_5_plus_percent
 
 	@administered_to_illinois_one_dose_5_plus_percent.setter
 	def administered_to_illinois_one_dose_5_plus_percent(self, administered_to_illinois_one_dose_5_plus_percent: float):
 		if not isinstance(administered_to_illinois_one_dose_5_plus_percent, float):
 			administered_to_illinois_one_dose_5_plus_percent = float(administered_to_illinois_one_dose_5_plus_percent)
-		self.administered_to_illinois_one_dose_5_plus_percent = administered_to_illinois_one_dose_5_plus_percent
+		self._administered_to_illinois_one_dose_5_plus_percent = administered_to_illinois_one_dose_5_plus_percent
 
 	@property
 	def administered_to_illinois_one_dose_12_plus(self) -> int:
-		return self._dministered_to_illinois_one_dose_12_plus
+		return self._administered_to_illinois_one_dose_12_plus
 
 	@administered_to_illinois_one_dose_12_plus.setter
 	def administered_to_illinois_one_dose_12_plus(self, administered_to_illinois_one_dose_12_plus: int):
@@ -1186,17 +1186,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_one_dose_12_plus_percent(self) -> float:
-		return self._dministered_to_illinois_one_dose_12_plus_percent
+		return self._administered_to_illinois_one_dose_12_plus_percent
 
 	@administered_to_illinois_one_dose_12_plus_percent.setter
 	def administered_to_illinois_one_dose_12_plus_percent(self, administered_to_illinois_one_dose_12_plus_percent: float):
 		if not isinstance(administered_to_illinois_one_dose_12_plus_percent, float):
 			administered_to_illinois_one_dose_12_plus_percent = float(administered_to_illinois_one_dose_12_plus_percent)
-		self.administered_to_illinois_one_dose_12_plus_percent = administered_to_illinois_one_dose_12_plus_percent
+		self._administered_to_illinois_one_dose_12_plus_percent = administered_to_illinois_one_dose_12_plus_percent
 
 	@property
 	def administered_to_illinois_one_dose_18_plus(self) -> int:
-		return self._dministered_to_illinois_one_dose_18_plus
+		return self._administered_to_illinois_one_dose_18_plus
 
 	@administered_to_illinois_one_dose_18_plus.setter
 	def administered_to_illinois_one_dose_18_plus(self, administered_to_illinois_one_dose_18_plus: int):
@@ -1206,17 +1206,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_one_dose_18_plus_percent(self) -> float:
-		return self._dministered_to_illinois_one_dose_18_plus_percent
+		return self._administered_to_illinois_one_dose_18_plus_percent
 
 	@administered_to_illinois_one_dose_18_plus_percent.setter
 	def administered_to_illinois_one_dose_18_plus_percent(self, administered_to_illinois_one_dose_18_plus_percent: float):
 		if not isinstance(administered_to_illinois_one_dose_18_plus_percent, float):
 			administered_to_illinois_one_dose_18_plus_percent = float(administered_to_illinois_one_dose_18_plus_percent)
-		self.administered_to_illinois_one_dose_18_plus_percent = administered_to_illinois_one_dose_18_plus_percent
+		self._administered_to_illinois_one_dose_18_plus_percent = administered_to_illinois_one_dose_18_plus_percent
 
 	@property
 	def administered_to_illinois_one_dose_65_plus(self) -> int:
-		return self._dministered_to_illinois_one_dose_65_plus
+		return self._administered_to_illinois_one_dose_65_plus
 
 	@administered_to_illinois_one_dose_65_plus.setter
 	def administered_to_illinois_one_dose_65_plus(self, administered_to_illinois_one_dose_65_plus: int):
@@ -1226,13 +1226,13 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinois_one_dose_65_plus_percent(self) -> float:
-		return self._dministered_to_illinois_one_dose_65_plus_percent
+		return self._administered_to_illinois_one_dose_65_plus_percent
 
 	@administered_to_illinois_one_dose_65_plus_percent.setter
 	def administered_to_illinois_one_dose_65_plus_percent(self, administered_to_illinois_one_dose_65_plus_percent: float):
 		if not isinstance(administered_to_illinois_one_dose_65_plus_percent, float):
 			administered_to_illinois_one_dose_65_plus_percent = float(administered_to_illinois_one_dose_65_plus_percent)
-		self.administered_to_illinois_one_dose_65_plus_percent = administered_to_illinois_one_dose_65_plus_percent
+		self._administered_to_illinois_one_dose_65_plus_percent = administered_to_illinois_one_dose_65_plus_percent
 	# endregion
 
 	# region One Dose Administered to Illinoisans
@@ -1248,17 +1248,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_one_dose_5_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_one_dose_5_plus_percent
+		return self._administered_to_illinoisans_one_dose_5_plus_percent
 
 	@administered_to_illinoisans_one_dose_5_plus_percent.setter
 	def administered_to_illinoisans_one_dose_5_plus_percent(self, administered_to_illinoisans_one_dose_5_plus_percent: float):
 		if not isinstance(administered_to_illinoisans_one_dose_5_plus_percent, float):
 			administered_to_illinoisans_one_dose_5_plus_percent = float(administered_to_illinoisans_one_dose_5_plus_percent)
-		self.administered_to_illinoisans_one_dose_5_plus_percent = administered_to_illinoisans_one_dose_5_plus_percent
+		self._administered_to_illinoisans_one_dose_5_plus_percent = administered_to_illinoisans_one_dose_5_plus_percent
 
 	@property
 	def administered_to_illinoisans_one_dose_12_plus(self) -> int:
-		return self._dministered_to_illinoisans_one_dose_12_plus
+		return self._administered_to_illinoisans_one_dose_12_plus
 
 	@administered_to_illinoisans_one_dose_12_plus.setter
 	def administered_to_illinoisans_one_dose_12_plus(self, administered_to_illinoisans_one_dose_12_plus: int):
@@ -1268,17 +1268,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_one_dose_12_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_one_dose_12_plus_percent
+		return self._administered_to_illinoisans_one_dose_12_plus_percent
 
 	@administered_to_illinoisans_one_dose_12_plus_percent.setter
 	def administered_to_illinoisans_one_dose_12_plus_percent(self, administered_to_illinoisans_one_dose_12_plus_percent: float):
 		if not isinstance(administered_to_illinoisans_one_dose_12_plus_percent, float):
 			administered_to_illinoisans_one_dose_12_plus_percent = float(administered_to_illinoisans_one_dose_12_plus_percent)
-		self.administered_to_illinoisans_one_dose_12_plus_percent = administered_to_illinoisans_one_dose_12_plus_percent
+		self._administered_to_illinoisans_one_dose_12_plus_percent = administered_to_illinoisans_one_dose_12_plus_percent
 
 	@property
 	def administered_to_illinoisans_one_dose_18_plus(self) -> int:
-		return self._dministered_to_illinoisans_one_dose_18_plus
+		return self._administered_to_illinoisans_one_dose_18_plus
 
 	@administered_to_illinoisans_one_dose_18_plus.setter
 	def administered_to_illinoisans_one_dose_18_plus(self, administered_to_illinoisans_one_dose_18_plus: int):
@@ -1288,17 +1288,17 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_one_dose_18_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_one_dose_18_plus_percent
+		return self._administered_to_illinoisans_one_dose_18_plus_percent
 
 	@administered_to_illinoisans_one_dose_18_plus_percent.setter
 	def administered_to_illinoisans_one_dose_18_plus_percent(self, administered_to_illinoisans_one_dose_18_plus_percent: float):
 		if not isinstance(administered_to_illinoisans_one_dose_18_plus_percent, float):
 			administered_to_illinoisans_one_dose_18_plus_percent = float(administered_to_illinoisans_one_dose_18_plus_percent)
-		self.administered_to_illinoisans_one_dose_18_plus_percent = administered_to_illinoisans_one_dose_18_plus_percent
+		self._administered_to_illinoisans_one_dose_18_plus_percent = administered_to_illinoisans_one_dose_18_plus_percent
 
 	@property
 	def administered_to_illinoisans_one_dose_65_plus(self) -> int:
-		return self._dministered_to_illinoisans_one_dose_65_plus
+		return self._administered_to_illinoisans_one_dose_65_plus
 
 	@administered_to_illinoisans_one_dose_65_plus.setter
 	def administered_to_illinoisans_one_dose_65_plus(self, administered_to_illinoisans_one_dose_65_plus: int):
@@ -1308,7 +1308,7 @@ class StateWideVaccine:
 
 	@property
 	def administered_to_illinoisans_one_dose_65_plus_percent(self) -> float:
-		return self._dministered_to_illinoisans_one_dose_65_plus_percent
+		return self._administered_to_illinoisans_one_dose_65_plus_percent
 
 	@administered_to_illinoisans_one_dose_65_plus_percent.setter
 	def administered_to_illinoisans_one_dose_65_plus_percent(self, administered_to_illinoisans_one_dose_65_plus_percent: float):
@@ -1361,7 +1361,7 @@ class StateWideVaccine:
 
 	@classmethod
 	def from_json(cls, json:dict):
-		return cls(report_date=json["Report_Date"], total_doses=json["Total_Delivered"],
+		return cls(report_date=json_to_date(json["Report_Date"]), total_doses=json["Total_Delivered"],
 					total_administered=json["Total_Administered"], persons_fully_vaccinated=json["Persons_Fully_Vaccinated"],
 					administered_rolling_average=json["AdministeredRollAvg"],
 					administered_to_illinois_fully_vaccinated_5_plus=json["Persons_Fully_Vaccinated5plus"],
