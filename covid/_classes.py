@@ -3,10 +3,10 @@ from datetime import date, datetime as dt
 
 def iter_check(obj, type_name, name=None):
 	if not hasattr(obj, "__iter__"):
-		raise ValueError(f"{name} needs to be an iterable object, not: {obj.__name__}")
+		raise ValueError(f"{name} needs to be an iterable object, not: {obj.__class__.__name__}")
 	for inner in obj:
 		if not isinstance(inner, type_name):
-			raise ValueError(f"Every object in the races iterable must be a {type_name.__name__} object, not: {inner.__name__}")
+			raise ValueError(f"Every object in the races iterable must be a {type_name.__class__.__name__} object, not: {inner.__class__.__name__}")
 	return obj if isinstance(obj, list) else list(obj)
 
 
@@ -43,7 +43,7 @@ class IllinoisTestingResults:
 	@test_date.setter
 	def test_date(self, test_date:date):
 		if not isinstance(test_date, date):
-			raise ValueError(f"The test date must be a datetime.date object, not: {last_updated_date.__name__}")
+			raise ValueError(f"The test date must be a datetime.date object, not: {last_updated_date.__class__.__name__}")
 		self._test_date = test_date
 
 	@property
@@ -235,7 +235,7 @@ class VaccineAdministration:
 	@report_date.setter
 	def report_date(self, report_date:date):
 		if not isinstance(report_date, date):
-			raise ValueError(f"The report date must be a datetime.date object, not: {report_date.__name__}")
+			raise ValueError(f"The report date must be a datetime.date object, not: {report_date.__class__.__name__}")
 		self._report_date = report_date
 
 	@property
@@ -435,7 +435,7 @@ class VaccineAdministration:
 	@inventory_report_date.setter
 	def inventory_report_date(self, inventory_report_date: date):
 		if not isinstance(inventory_report_date, date):
-			raise ValueError(f"The inventory report date must be a datetime.date object, not: {inventory_report_date.__name__}")
+			raise ValueError(f"The inventory report date must be a datetime.date object, not: {inventory_report_date.__class__.__name__}")
 		self._inventory_report_date = inventory_report_date
 
 	def value_tuple(self) -> tuple:
@@ -509,7 +509,7 @@ class Administration:
 	@current_vaccine_administration.setter
 	def current_vaccine_administration(self, current_vaccine_administration:VaccineAdministration):
 		if not isinstance(current_vaccine_administration, VaccineAdministration):
-			raise ValueError(f"The current_vaccine_administration must be a VaccineAdministration object, not: {vaccine_admin.__name__}")
+			raise ValueError(f"The current_vaccine_administration must be a VaccineAdministration object, not: {vaccine_admin.__class__.__name__}")
 		self._current_vaccine_administration = current_vaccine_administration
 
 	@classmethod
@@ -818,7 +818,7 @@ class CountyDemographic:
 	@demographics.setter
 	def demographics(self, demographics:Demographics):
 		if not isinstance(demographics, Demographics):
-			raise ValueError(f"The demographics object must be a Demographics object, not: {demographics.__name__}")
+			raise ValueError(f"The demographics object must be a Demographics object, not: {demographics.__class__.__name__}")
 		self._demographics = demographics
 
 	@classmethod
@@ -856,7 +856,7 @@ class Root:
 	@last_updated_date.setter
 	def last_updated_date(self, last_updated_date:date):
 		if not isinstance(last_updated_date, date):
-			raise ValueError(f"The last updated date must be a datetime.date object, not: {last_updated_date.__name__}")
+			raise ValueError(f"The last updated date must be a datetime.date object, not: {last_updated_date.__class__.__name__}")
 		self._last_updated_date = last_updated_date
 
 	@property
@@ -866,10 +866,10 @@ class Root:
 	@county_demographics.setter
 	def county_demographics(self, county_demographics:list[CountyDemographic]):
 		if not hasattr(county_demographics, "__iter__"):
-			raise ValueError(f"The county demographics need to be an iterable object, not: {county_demographics.__name__}")
+			raise ValueError(f"The county demographics need to be an iterable object, not: {county_demographics.__class__.__name__}")
 		for demographic in county_demographics:
 			if not isinstance(demographic, CountyDemographic):
-				raise ValueError(f"Every object in the county_demographic iterable must be a CountyDemographics object, not: {demographic.__name__}")
+				raise ValueError(f"Every object in the county_demographic iterable must be a CountyDemographics object, not: {demographic.__class__.__name__}")
 		if isinstance(county_demographics, list):
 			self._county_demographics = county_demographics
 		else:
@@ -946,7 +946,7 @@ class StateWideVaccine:
 	@report_date.setter
 	def report_date(self, report_date: date):
 		if not isinstance(report_date, date):
-			raise ValueError(f"The report date must be a datetime.date object, not: {report_date.__name__}")
+			raise ValueError(f"The report date must be a datetime.date object, not: {report_date.__class__.__name__}")
 		self._report_date = report_date
 
 	@property

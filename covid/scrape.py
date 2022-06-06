@@ -35,7 +35,7 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 
 def scrape_gender_data(db:CMySQLConnection, county=County.Illinois):
 	if not isinstance(county, County):
-		raise ValueError(f"The given county when scraping the gender_data needs to be from the County Enum, not {county.__name__}")
+		raise ValueError(f"The given county when scraping the gender_data needs to be from the County Enum, not {county.__class__.__name__}")
 	response = get(get_age_race_link()).content
 	data = Root.from_json(loads(response))
 	county_data = data[county.value]
@@ -61,7 +61,7 @@ def scrape_gender_data(db:CMySQLConnection, county=County.Illinois):
 
 def scrape_age_race_data(db:CMySQLConnection, county=County.Illinois):
 	if not isinstance(county, County):
-		raise ValueError(f"The given county when scraping the age_race_data needs to be from the County Enum, not {county.__name__}")
+		raise ValueError(f"The given county when scraping the age_race_data needs to be from the County Enum, not {county.__class__.__name__}")
 	response = get(get_age_race_link()).content
 	data = Root.from_json(loads(response))
 	county_data = data[county.value]
