@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+def generate_placeholders(number:int) -> str:
+	return ("%s," * number).strip(",")
+
+
 # region Overall Data Links
 def get_county_data_link() -> str:
 	return "http://www.dph.illinois.gov/sitefiles/CountyList.json?nocache=1"

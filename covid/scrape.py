@@ -84,7 +84,7 @@ def scrape_age_race_data(db:CMySQLConnection, county=County.Illinois):
 		totals = [sql_today, "Total"]
 		i = 0
 		for total_age_group in zip(*lst):
-			while i < 2:  # Ignores the date and age_group
+			if i < 2:  # Ignores the date and age_group
 				i += 1
 				continue
 
