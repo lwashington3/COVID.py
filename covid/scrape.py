@@ -16,7 +16,7 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 	response = get(get_overall_data_link()).content
 	data = OverallData.from_json(loads(response))
 	cursor = db.cursor(buffered=True)
-	sql_format = "INSERT INTO covid.OVERALL VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+	sql_format = "INSERT INTO covid.Overall VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 	today, sql_today = get_dates()
 
 	if add_each_entry:
@@ -28,7 +28,7 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 
 		row = data[today]
 		if row is None:
-			return  # raise ValueError(f"Cannot find the state testing results for today, {today:%B %d, %Y}")
+			return
 		cursor.execute(sql_format, row.value_tuple())
 	db.commit()
 
@@ -44,7 +44,7 @@ def scrape_gender_data(db:CMySQLConnection, county=County.Illinois):
 	genders = county_data.demographics.genders
 
 	for table_name in ("Confirmed_Cases", "Tested", "Deaths"):
-		sql_format = f"INSERT INTO covid_gender.{table_name} VALUES(%s,%d,%d,%d,%d)"
+		sql_format = f"INSERT INTO covid_gender.{table_name} VALUES(%s,%s,%s,%s,%s)"
 		cursor.execute(f"SELECT COUNT(*) FROM covid_gender.{table_name} WHERE date = '{sql_today}'")
 		if cursor.fetchone()[0]:
 			continue
@@ -79,6 +79,18 @@ def scrape_age_race_data(db:CMySQLConnection, county=County.Illinois):
 			full = [sql_today]
 			full.extend(age_group.value_tuple(table_name.lower()))
 			lst.append(full)
+
+		# region Create total row
+		totals = [sql_today, "Total"]
+		i = 0
+		for total_age_group in zip(*lst):
+			while i < 2:  # Ignores the date and age_group
+				i += 1
+				continue
+
+			totals.append(sum(total_age_group))
+		lst.append(totals)
+		# endregion
 
 		cursor.executemany(sql_format, lst)
 	db.commit()

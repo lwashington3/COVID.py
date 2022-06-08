@@ -170,7 +170,7 @@ class OverallData:
 			return self.state_testing_results[item]
 		elif isinstance(item, date):
 			for testing_result in self:
-				if date == testing_result.test_date:
+				if item == testing_result.test_date:
 					return testing_result
 		return None
 
