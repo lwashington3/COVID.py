@@ -3,3 +3,4 @@ winvenv/
 .idea/
 setup.sh
 update
+covid/totals.py

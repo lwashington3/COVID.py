@@ -48,6 +48,7 @@ def main_scrape(db:CMySQLConnection):
 def _add_common_options(parser):
 	parser.add_argument("-u", "--username", help="The username for the database", required=False)
 	parser.add_argument("-p", "--password", help="The password for the database", required=False)
+	parser.add_argument("-P", "--port", help="The port for the database", required=False)
 
 
 def _create_setup_parser(parser_factory):
@@ -87,9 +88,11 @@ def main(args):
 
 	username = arguments.username if arguments.username is not None else "covidbot"
 	password = arguments.password if arguments.password is not None else getenv("COVID_DB_PASSWORD")
+	port = arguments.port if arguments.port is not None else getenv("COVID_DB_PORT")
 	db = sql.connect(host="localhost",
 					 user=username,
-					 password=password)
+					 password=password,
+					 port=port)
 
 	if arguments.command == "setup":
 		from .setup_db import create

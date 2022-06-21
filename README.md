@@ -1,1 +1,2 @@
-A Python version of the IDPH Data Scraper.
+A Python version of the Illinois Department of Public Health Data Scraper I created in C#. The old project and its setup can be found [here](https://github.com/lwashington3/illinois_covid_data "https://github.com/lwashington3/illinois_covid_data").
+The purpose of creating the Python version was to have a better database for my projects instead of having to use Google Sheets and its API.
