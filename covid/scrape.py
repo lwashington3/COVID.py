@@ -17,16 +17,16 @@ def scrape_overall_data(db:CMySQLConnection, add_each_entry=False):
 	data = OverallData.from_json(loads(response))
 	cursor = db.cursor(buffered=True)
 	sql_format = "INSERT INTO covid.Overall VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-	today, sql_today = get_dates()
+	day, sql_day = get_dates(date.today() - td(days=1))
 
 	if add_each_entry:
 		cursor.executemany(sql_format, [testing_result.value_tuple() for testing_result in data.state_testing_results])
 	else:
-		cursor.execute(f"SELECT COUNT(*) FROM covid.Overall WHERE date = '{sql_today}'")
+		cursor.execute(f"SELECT COUNT(*) FROM covid.Overall WHERE date = '{sql_day}'")
 		if cursor.fetchone()[0]:
 			return
 
-		row = data[today]
+		row = data[day]
 		if row is None:
 			return
 		cursor.execute(sql_format, row.value_tuple())
